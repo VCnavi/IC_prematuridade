@@ -47,7 +47,3 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
-
-# Other documents
-.xlsx
-.png
