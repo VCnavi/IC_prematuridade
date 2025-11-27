@@ -48,9 +48,31 @@ cat(tab)
 
 As porcentagens utilizadas ao longo do relatório foram calculadas diretamente a partir dos valores absolutos obtidos nas filtragens anteriores. A porcentagem de partos prematuros em relação ao total de nascidos vivos foi obtida dividindo-se o número total de partos prematuros pelo total de nascidos vivos e multiplicando o resultado por 100. De maneira semelhante, esse processo foi aplicado para calcular as porcentagens de partos prematuros eletivos e partos prematuros espontâneos em relação ao total de nascidos vivos e ao total de partos prematuros, criando diferentes taxas para a análise. Empregando esse procedimento para todos esses casos, foi possível adicionar ao banco de dados informações relativas aos anos no Estado de São Paulo como um todo e também informações relativas aos anos e às RRAS separadamente. Esses cálculos geraram os valores exibidos nas séries temporais nos gráficos do respectivo relatório, que foram produzidos de modo a permitir a observação da evolução anual das taxas de todos os tipos de partos prematuros tanto para o estado quanto para cada RRAS.
 
-Para a avaliação das séries temporais, buscando identificar se elas apresentavam tendência ao longo dos anos, aplicou-se o teste de Mann-Kendall, um teste não paramétrico utilizado em séries anuais que não exige normalidade dos dados nem pressupõe formas específicas de crescimento ou queda. Esse teste foi empregado para analisar as séries de porcentagem de partos prematuros, partos prematuros eletivos e partos prematuros espontâneos. Os resultados são apresentados no relatório sob a forma de valores de p, indicação de significância estatística, onde consideramos p \< 0.05 significativo e p \< 0.01 altamente significativo, e direção da tendência.
+Para a avaliação das séries temporais, buscando identificar se elas apresentavam tendência ao longo dos anos, aplicou-se o teste de Mann-Kendall. Esse teste foi empregado para analisar as séries de porcentagem de partos prematuros, partos prematuros eletivos e partos prematuros espontâneos.
 
 Para interpretar os resultados dos testes estatísticos, entende-se que as conclusões determinadas como significativas correspondem a casos em que a tendência observada não é compatível com variações aleatórias, indicando que a série apresenta mudança consistente ao longo do tempo. Já para conclusões determinadas como não significativas, entende-se que não foram encontradas evidências estatísticas suficientes para afirmar que houve aumento ou redução consistente na variabilidade dos dados.
+
+## Teste de Mann-Kendall
+
+O teste de Mann-Kendall detecta a presença de uma tendência monotônica em uma série temporal. Trata-se de um método não paramétrico, ou seja, não faz suposições sobre a distribuição subjacente dos dados.
+
+O teste avalia as seguintes hipóteses estatísticas [@Blain_2013]:
+
+-   Hipótese nula ($H_0$): Não existe tendência monotônica na série temporal (os dados são independentes e identicamente distribuídos)
+
+-   Hipótese alternativa ($H_1$): Existe uma tendência monotônica na série temporal (os dados não são independentes e apresentam uma direção de mudança sistemática)
+
+Dentre os resultados fornecidos por este teste, destacam-se as seguintes medidas:
+
+-   O Tau de Kendall, ou coeficiente de correlação por ordem de Kendall, que mede a monotonicidade da inclinação. O Tau de Kendall varia entre -1 e 1; é positivo quando a tendência aumenta e negativo quando a tendência diminui.
+
+-   A inclinação de Sen, que estima a inclinação geral da série temporal. Esta inclinação corresponde à mediana de todas as inclinações calculadas entre cada par de pontos na série.
+
+-   A significância, que representa o limiar para o qual a hipótese de que não há tendência é aceita. A tendência é estatisticamente significativa quando o valor-p é menor que 0.05.
+
+Para a realização das análises no R, foram utilizadas as funções `mk.test()`, referente ao teste de Mann-Kendall, e `sens.slope()`, para estimativa da inclinação de Sen, ambas pertencentes ao pacote `trend` [@trend].
+
+Os resultados são apresentados no relatório sob a forma de valores de P relacionados ao teste de Mann-Kendall, indicação de significância estatística, onde consideramos p \< 0.05 significativo e p \< 0.01 altamente significativo, e direção da tendência dada pela inclinação de Sen.
 
 # Estado de São Paulo
 
@@ -155,28 +177,28 @@ tabela_tendencias_rras2 <- dados_ano |>
   summarise(
     
     # Teste para Partos Prematuros 
-    `Valor P - PP` = round(mk.test(taxa_PP)$p.value, 5),
+    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
     `Conclusão do teste - PP` = case_when(
-      `Valor P - PP` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PP` < 0.05 ~ "Significativa",
+      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PP` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),
     
         # Teste para Partos Prematuros Eletivos
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),
     
     # Teste para Partos Prematuros espontâneos
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente"),
@@ -186,7 +208,7 @@ tabela_tendencias_rras2 |>
   kable()
 ```
 
-Ao analisar a série histórica completa (2012-2023), observou-se uma tendência de crescimento visual mais clara nas taxas de partos prematuros espontâneos, enquanto os demais gráficos, apesar de demonstrarem crescimento a partir de determinado ponto, apresentaram também uma queda visualmente relevante entre os anos de 2012 e 2015. Por conta disso, o teste de Mann-Kendall indicou que apenas a tendência de crescimento dos partos prematuros espontâneos foi estatisticamente significativa (p \< 0,05). Isso sugere que, embora haja flutuações nas outras taxas, o aumento da prematuridade espontânea é o único estatísticamente consistente na série completa.
+Ao analisar a série histórica completa (2012-2023), observou-se uma tendência de crescimento visual mais clara nas taxas de partos prematuros espontâneos, enquanto os demais gráficos, apesar de demonstrarem crescimento a partir de determinado ponto, apresentaram também uma queda visualmente relevante entre os anos de 2012 e 2015. Por conta disso, o teste de Mann-Kendall indicou que apenas a tendência de crescimento dos partos prematuros espontâneos foi estatisticamente significativa (p \< 0.05). Isso sugere que, embora haja flutuações nas outras taxas, o aumento da prematuridade espontânea é o único estatísticamente consistente na série completa.
 
 Por ter-se observado que os demais gráficos apresentavam uma aparente consistência a partir do ano de 2015, foi realizado um recorte da série histórica para esses dados, com o intuito de testar as hipóteses de que, dentro desse recorte, os dados apresentavam um aumento consistente em suas variações.
 
@@ -242,28 +264,28 @@ tabela_tendencias_2015_2023 <- dados_recorte |>
   summarise(
     
     # Teste para Partos Prematuros 
-    `Valor P - PP` = round(mk.test(taxa_PP)$p.value, 5),
+    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
     `Conclusão do teste - PP` = case_when(
-      `Valor P - PP` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PP` < 0.05 ~ "Significativa",
+      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PP` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),
     
     # Teste para Partos Prematuros Eletivos
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),
     
     # Teste para Partos Prematuros espontâneos
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente")
@@ -321,19 +343,19 @@ tabela_tendencias_rras2 <- dados_ano |>
   summarise(
     
         # Teste para Partos Prematuros Eletivos
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_PP)$estimates > 0, "Crescente", "Decrescente"),
     
     # Teste para Partos Prematuros espontâneos
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_PP)$estimates > 0, "Crescente", "Decrescente"),
@@ -342,6 +364,8 @@ tabela_tendencias_rras2 <- dados_ano |>
 tabela_tendencias_rras2 |>
   kable()
 ```
+
+A análise não evidenciou tendências estatisticamente significativas na porcentagem de partos prematuros eletivos ou espontâneos em relação aos partos prematuros.
 
 # RRAS do Estado de São Paulo
 
@@ -400,28 +424,28 @@ tabela_tendencias_rras1 <- dados_ano_rras |>
   summarise(
     
     # Teste para Partos Prematuros 
-    `Valor P - PP` = round(mk.test(taxa_PP)$p.value, 5),
+    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
     `Conclusão do teste - PP` = case_when(
-      `Valor P - PP` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PP` < 0.05 ~ "Significativa",
+      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PP` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),
     
         # Teste para Partos Prematuros Eletivos
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),
     
     # Teste para Partos Prematuros espontâneos
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente"),
@@ -474,19 +498,19 @@ tabela_tendencias_rras2 <- dados_ano_rras |>
   summarise(
     
         # Teste para Partos Prematuros Eletivos
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_PP)$estimates > 0, "Crescente", "Decrescente"),
     
     # Teste para Partos Prematuros espontâneos
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_PP)$estimates > 0, "Crescente", "Decrescente"),
@@ -598,10 +622,10 @@ tabela_tendencias_rras1 <- dados_sig |>
   group_by(RRAS) |> 
   summarise(
     
-    `Valor P - PP` = round(mk.test(taxa_PP)$p.value, 5),
+    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
     `Conclusão do teste - PP` = case_when(
-      `Valor P - PP` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PP` < 0.05 ~ "Significativa",
+      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PP` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),       
@@ -613,7 +637,7 @@ tabela_tendencias_rras1 |>
   kable()
 ```
 
-Na análise das taxas dos partos prematuros gerais em relação aos nascidos vivos, quatro regiões exibiram comportamentos significativos pelo teste de Mann-Kendall. No grupo que apresentou crescimento, destacaram-se as RRAS 09, 11 e 17. A RRAS 17 demonstrou a tendência de alta mais robusta e consistente do período (p \< 0,01), indicando um agravamento contínuo do indicador, enquanto a RRAS 09 encerrou a série histórica com a maior taxa entre as RRAS com estatística significativa (13,05%). Em contrapartida, a RRAS 12 foi a única região a apresentar uma tendência significativa de decréscimo, revertendo sua taxa inicial elevada (13,6% em 2012) para um patamar próximo ao da taxa estadual (11,743% em 2023).
+Na análise das taxas dos partos prematuros gerais em relação aos nascidos vivos, quatro regiões exibiram comportamentos significativos pelo teste de Mann-Kendall. No grupo que apresentou crescimento, destacaram-se as RRAS 09, 11 e 17. A RRAS 17 demonstrou a tendência de alta mais robusta e consistente do período (p \< 0.01), indicando um agravamento contínuo do indicador, enquanto a RRAS 09 encerrou a série histórica com a maior taxa entre as RRAS com estatística significativa (13,05%). Em contrapartida, a RRAS 12 foi a única região a apresentar uma tendência significativa de decréscimo, revertendo sua taxa inicial elevada (13,6% em 2012) para um patamar próximo ao da taxa estadual (11,743% em 2023).
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppel-nv
@@ -648,10 +672,10 @@ tabela_tendencias_rras1 <- dados_sig |>
   group_by(RRAS) |> 
   summarise(
     
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),       
@@ -663,7 +687,7 @@ tabela_tendencias_rras1 |>
   kable()
 ```
 
-A análise das taxas de partos prematuros eletivos em relação aos nascidos vivos demonstrou que a tendência geral entre as RRAS que demonstraram variação estatisticamente significativa foi de crescimento. As RRAS 09, 10, 11, 16, 17 e 19 exibiram curvas ascendentes, indicando um aumento consistente na proporção de partos antecipados por intervenção médica nessas localidades. Destaca-se a RRAS 16, que apresentou a tendência de alta mais acentuada e significativa de todo o conjunto (p \< 0,001), seguida pelas RRAS 09 e 17, que também mostraram crescimento altamente significativo (p \< 0,01). Em contrapartida, a RRAS 03 foi a única região a registrar uma tendência significativa de queda neste indicador, divergindo dos padrões observados no restante do estado.
+A análise das taxas de partos prematuros eletivos em relação aos nascidos vivos demonstrou que a tendência geral entre as RRAS que demonstraram variação estatisticamente significativa foi de crescimento. As RRAS 09, 10, 11, 16, 17 e 19 exibiram curvas ascendentes, indicando um aumento consistente na proporção de partos antecipados por intervenção médica nessas localidades. Destaca-se a RRAS 16, que apresentou a tendência de alta mais acentuada e significativa de todo o conjunto (p \< 0.001), seguida pelas RRAS 09 e 17, que também mostraram crescimento altamente significativo (p \< 0.01). Em contrapartida, a RRAS 03 foi a única região a registrar uma tendência significativa de queda neste indicador, divergindo dos padrões observados no restante do estado.
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppes-nv
@@ -696,10 +720,10 @@ dados_sig <- dados_ano_rras |>
   group_by(RRAS) |> 
   summarise(
     
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente"),
@@ -710,6 +734,10 @@ dados_sig <- dados_ano_rras |>
 tabela_tendencias_rras1 |>
   kable()
 ```
+
+A análise das taxas de partos prematuros espontâneos em relação aos nascidos vivos revelou um cenário predominante de crescimento entre as RRAS que apresentaram variação estatisticamente significativa.
+
+Destaca-se a RRAS 17, que apresentou uma tendência de crescimento altamente significativa (p = 0.00127), sendo a mais acentuada neste indicador. A RRAS 16 foi a única região a registrar uma tendência altamente significativa de queda (p = 0.00319), divergindo claramente do padrão de crescimento observado na maioria das demais localidades. As demais RRAS (01, 08, 10 e 15) mostraram um crescimento significativo, consolidando a tendência geral de aumento dos partos prematuros espontâneos no estado.
 
 ## Partos prematuros
 
@@ -745,10 +773,10 @@ tabela_tendencias_rras2 <- dados_sig |>
   group_by(RRAS) |> 
   summarise(
     
-    `Valor P - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
     `Conclusão do teste - PPel` = case_when(
-      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPel` < 0.05 ~ "Significativa",
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_PP)$estimates > 0, "Crescente", "Decrescente"),       
@@ -759,6 +787,12 @@ tabela_tendencias_rras2 <- dados_sig |>
 tabela_tendencias_rras2 |>
   kable()
 ```
+
+A análise da participação relativa dos partos prematuros eletivos dentro do total de partos prematuros revelou um cenário divergente e polarizado entre as Regiões de Saúde (RRAS). Enquanto um grupo de regiões apresentou uma nítida tendência de crescimento na proporção de partos eletivos, outro grupo demonstrou um movimento igualmente significativo de redução.
+
+As RRAS 09, 10, 11, 13 e 16 exibiram curvas ascendentes, indicando que a intervenção médica eletiva tem representado uma fatia cada vez maior dos partos prematuros nessas localidades. A RRAS 16 se destacou com a tendência de alta mais acentuada e altamente significativa de todo o conjunto (p \< 0.001).
+
+Em contrapartida, as RRAS 01 e 08 registraram tendências altamente significativas de queda (p \< 0.01) neste indicador. Isso demonstra que, nessas regiões, os partos prematuros eletivos vêm perdendo participação relativa dentro do universo da prematuridade, divergindo dos padrões de crescimento observados em outras partes do estado.
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppes-pp
@@ -792,10 +826,10 @@ dados_sig <- dados_ano_rras |>
   group_by(RRAS) |> 
   summarise(
     
-    `Valor P - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
     `Conclusão do teste - PPes` = case_when(
-      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor P - PPes` < 0.05 ~ "Significativa",
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
     `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_PP)$estimates > 0, "Crescente", "Decrescente"),
@@ -805,4 +839,11 @@ dados_sig <- dados_ano_rras |>
 
 tabela_tendencias_rras2 |>
   kable()
+
 ```
+
+A análise da participação relativa dos partos prematuros espontâneos dentro do total de partos prematuros revelou tendências opostas entre as Regiões de Saúde que apresentaram variação estatisticamente significativa.
+
+A RRAS 1 foi a única a registrar uma tendência significativa de crescimento (p = 0.04674) neste indicador, indicando que a prematuridade espontânea tem representado uma parcela cada vez maior dos partos prematuros nesta região.
+
+Em contrapartida, as RRAS 16 e 19 exibiram tendências decrescentes. A RRAS 16 se destacou com uma queda altamente significativa (p = 0.00127). A RRAS 19 também seguiu essa trajetória de redução, porém em um patamar significativo (p = 0.04674).
