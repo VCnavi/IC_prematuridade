@@ -9,8 +9,10 @@ format:
       style: "floating"
       background: "light"
       collapse-level: 1
-
+bibliography: bibliography.bib
 editor: visual
+execute:
+  no-python: true
 ---
 
 ```{r, echo=FALSE}
@@ -19,17 +21,38 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 
 # Métodos
 
-Para a realização deste estudo, foram utilizados dados provenientes das bases oficiais do Sistema de Informação sobre Nascidos Vivos (SINASC), com foco nos dados de parturientes residentes no Estado de São Paulo, nos anos de 2012 a 2023. Realizando associações com dados disponibilizados pela Secretaria de Informação e Saúde Digital (SEIDIGI), também foi possível separar os registros em suas respectivas Redes Regionais de Atenção à Saúde (RRAS). A partir disso, realizou-se uma limpeza nos dados para identificar os casos em que a idade gestacional era maior ou igual a 22 semanas ou, nos casos em que não havia informação sobre a idade gestacional, identificar os casos em que o peso do recém-nascido era maior que 500 gramas. Dessa maneira, obteve-se os dados gerais dos nascidos vivos do Estado de São Paulo nos anos de 2012 a 2023.
+Para a realização deste estudo, foram utilizados dados provenientes das bases oficiais do Sistema de Informação sobre Nascidos Vivos (SINASC), com foco nos dados de parturientes residentes no Estado de São Paulo, nos anos de 2012 a 2023. Realizando associações com dados fornecidos pelo Departamento de Gestão Interfederativa e Participativa (DGIP) da Secretaria Executiva (SE) do Ministério da Saúde (MS), e disponibilizados pelo Departamento de Monitoramento, Avaliação e Disseminação de Informações Estratégicas em Saúde (DEMAS) da Secretaria de Informação e Saúde Digital (SEIDIGI) [@infoms], também foi possível separar os registros em suas respectivas Redes Regionais de Atenção à Saúde (RRAS). A partir disso, realizou-se uma limpeza nos dados para identificar os casos em que a idade gestacional era maior ou igual a 22 semanas ou, nos casos em que não havia informação sobre a idade gestacional, identificar os casos em que o peso do recém-nascido era maior que 500 gramas. Dessa maneira, obteve-se os dados gerais dos nascidos vivos do Estado de São Paulo nos anos de 2012
 
-Para a identificação dos casos de partos prematuros, realizou-se, nos dados gerais de nascidos vivos obtidos anteriormente, um filtro na idade gestacional, em que todo parto com idade gestacional entre 22 e 36 semanas foi classificado como parto prematuro. Em seguida, para caracterizar os casos de partos prematuros eletivos e partos prematuros espontâneos, utilizaram-se as informações relativas aos trabalhos de parto. Assim, caso não houvesse trabalho de parto induzido e não houvesse cesárea antes do início do trabalho de parto, os dados eram classificados como partos prematuros espontâneos. Os demais casos em que havia alguma informação sobre o trabalho de parto foram classificados como partos prematuros eletivos.
+Para identificar os partos prematuros, aplicou-se um filtro de idade gestacional aos dados de nascidos vivos. Foram classificados como parto prematuro (PP) todos os nascimentos com idade gestacional entre 22 e 36 semanas. Na etapa seguinte, para distinguir entre partos prematuros espontâneos (PPes) e eletivos (PPel), foram utilizadas as variáveis STTRABPART, que indica a ocorrência de trabalho de parto induzido, e STCESPARTO, que informa se foi realizada cesárea antes do início do trabalho de parto.
+
+Assim, caso não houvesse trabalho de parto induzido e não houvesse cesárea antes do início do trabalho de parto, os dados eram classificados como partos prematuros espontâneos. Os demais casos em que havia alguma informação sobre o trabalho de parto foram classificados como partos prematuros eletivos. A tabela a seguir apresenta detalhadamente a classificação dos tipos de parto.
+
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+#| tab-label:
+tab <- "
+| Trabalho de parto induzido | Cersárea antes do trabalho de parto | Resultado do parto    |
+|:----------------------------------------:|:--------------------------------------------:|:-------------------------:|
+| Não                                      | Não                                          | Espontâneo                |
+| Não                                      | Sim                                          | Eletivo                   |
+| Sim                                      | Não                                          | Eletivo                   |
+| Sim                                      | Sim                                          | Eletivo                   |
+| Sem informação                           | Sem informação                               | Não tem como avaliar      |
+| Sem informação                           | Não                                          | Não tem como avaliar      |
+| Sem informação                           | Sim                                          | Eletivo                   |
+| Sim                                      | Sem informação                               | Não tem como avaliar      |
+| Não                                      | Sem informação                               | Eletivo|
+: Classificação do tipo de parto
+"
+cat(tab)
+```
 
 As porcentagens utilizadas ao longo do relatório foram calculadas diretamente a partir dos valores absolutos obtidos nas filtragens anteriores. A porcentagem de partos prematuros em relação ao total de nascidos vivos foi obtida dividindo-se o número total de partos prematuros pelo total de nascidos vivos e multiplicando o resultado por 100. De maneira semelhante, esse processo foi aplicado para calcular as porcentagens de partos prematuros eletivos e partos prematuros espontâneos em relação ao total de nascidos vivos e ao total de partos prematuros, criando diferentes taxas para a análise. Empregando esse procedimento para todos esses casos, foi possível adicionar ao banco de dados informações relativas aos anos no Estado de São Paulo como um todo e também informações relativas aos anos e às RRAS separadamente. Esses cálculos geraram os valores exibidos nas séries temporais nos gráficos do respectivo relatório, que foram produzidos de modo a permitir a observação da evolução anual das taxas de todos os tipos de partos prematuros tanto para o estado quanto para cada RRAS.
 
 Para a avaliação das séries temporais, buscando identificar se elas apresentavam tendência ao longo dos anos, aplicou-se o teste de Mann-Kendall, um teste não paramétrico utilizado em séries anuais que não exige normalidade dos dados nem pressupõe formas específicas de crescimento ou queda. Esse teste foi empregado para analisar as séries de porcentagem de partos prematuros, partos prematuros eletivos e partos prematuros espontâneos. Os resultados são apresentados no relatório sob a forma de valores de p, indicação de significância estatística, onde consideramos p \< 0.05 significativo e p \< 0.01 altamente significativo, e direção da tendência.
 
-Para interpretar os resultados dos testes estatísticos, entende-se que conclusões determinadas como significativas correspondem a casos em que a tendência observada não é compatível com variações aleatórias, indicando que a série apresenta mudança consistente ao longo do tempo. Já para conclusões determinadas como não significativas, entende-se que não foram encontradas evidências estatísticas suficientes para afirmar que houve aumento ou redução consistente na variabilidade dos dados.
+Para interpretar os resultados dos testes estatísticos, entende-se que as conclusões determinadas como significativas correspondem a casos em que a tendência observada não é compatível com variações aleatórias, indicando que a série apresenta mudança consistente ao longo do tempo. Já para conclusões determinadas como não significativas, entende-se que não foram encontradas evidências estatísticas suficientes para afirmar que houve aumento ou redução consistente na variabilidade dos dados.
 
-# São Paulo
+# Estado de São Paulo
 
 ## Nascidos vivos
 
@@ -84,8 +107,7 @@ Séries temporais das porcentagens de partos prematuros, partos prematuros eleti
 
 ```{r}
 #| label: graficos-tendencias-gerais1
-
-# fig-cap: "Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontãneos em relação ao total de nascidos vivos"
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos"
 
 # Gráfico para Partos Prematuros 
 highchart() |> 
@@ -122,14 +144,13 @@ highchart() |>
   hc_title(text = "Porcentagem de partos prematuros espontâneos dentre todos os nascidos vivos") |>
   hc_tooltip(shared = FALSE) |>
   hc_exporting(enabled = TRUE)
-
 ```
 
 ```{r}
 #| label: tabela-tendencias-gerais1
 #| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros por nascidos vivos"
 
-# Criar tabela com resultados para ambas as variáveis
+# Criar tabela com resultados para todas as variáveis
 tabela_tendencias_rras2 <- dados_ano |>
   summarise(
     
@@ -164,6 +185,98 @@ tabela_tendencias_rras2 <- dados_ano |>
 tabela_tendencias_rras2 |>
   kable()
 ```
+
+Ao analisar a série histórica completa (2012-2023), observou-se uma tendência de crescimento visual mais clara nas taxas de partos prematuros espontâneos, enquanto os demais gráficos, apesar de demonstrarem crescimento a partir de determinado ponto, apresentaram também uma queda visualmente relevante entre os anos de 2012 e 2015. Por conta disso, o teste de Mann-Kendall indicou que apenas a tendência de crescimento dos partos prematuros espontâneos foi estatisticamente significativa (p \< 0,05). Isso sugere que, embora haja flutuações nas outras taxas, o aumento da prematuridade espontânea é o único estatísticamente consistente na série completa.
+
+Por ter-se observado que os demais gráficos apresentavam uma aparente consistência a partir do ano de 2015, foi realizado um recorte da série histórica para esses dados, com o intuito de testar as hipóteses de que, dentro desse recorte, os dados apresentavam um aumento consistente em suas variações.
+
+## Recorte de 2015 à 2023 para Nascidos Vivos
+
+```{r}
+#| label: graficos-tendencias-recorte
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos nos anos de 2015 à 2023"
+dados_recorte <- dados_ano |> 
+  filter(ANO >= 2015 & ANO <= 2023)
+
+# Gráfico para Partos Prematuros (PP) - 2015 a 2023
+highchart() |> 
+  hc_add_series(dados_recorte, 
+                type = "line", 
+                hcaes(x = ANO, y = round(taxa_PP, 3)), 
+                name = "PP") |> 
+  hc_xAxis(title = list(text = "Ano")) |> 
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
+  hc_title(text = "Porcentagem de partos prematuros (2015-2023)") |> 
+  hc_tooltip(shared = FALSE) |> 
+  hc_exporting(enabled = TRUE)
+
+# Gráfico para Partos Prematuros Eletivos (PPel) - 2015 a 2023
+highchart() |> 
+  hc_add_series(dados_recorte, 
+                type = "line", 
+                hcaes(x = ANO, y = round(taxa_PPel_por_NV, 3)), 
+                name = "PPel") |> 
+  hc_xAxis(title = list(text = "Ano")) |> 
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
+  hc_title(text = "Porcentagem de partos prematuros eletivos (2015-2023)") |> 
+  hc_tooltip(shared = FALSE) |> 
+  hc_exporting(enabled = TRUE)
+
+# Gráfico para Partos Prematuros Espontâneos (PPes) - 2015 a 2023
+highchart() |> 
+  hc_add_series(dados_recorte, 
+                type = "line", 
+                hcaes(x = ANO, y = round(taxa_PPes_por_NV, 3)), 
+                name = "PPes") |> 
+  hc_xAxis(title = list(text = "Ano")) |> 
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
+  hc_title(text = "Porcentagem de partos prematuros espontâneos (2015-2023)") |> 
+  hc_tooltip(shared = FALSE) |> 
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-recorte
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros por nascidos vivos nos anos de 2015 à 2023"
+tabela_tendencias_2015_2023 <- dados_recorte |>
+  summarise(
+    
+    # Teste para Partos Prematuros 
+    `Valor P - PP` = round(mk.test(taxa_PP)$p.value, 5),
+    `Conclusão do teste - PP` = case_when(
+      `Valor P - PP` < 0.01 ~ "Altamente Significativa",
+      `Valor P - PP` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),
+    
+    # Teste para Partos Prematuros Eletivos
+    `Valor P - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
+    `Conclusão do teste - PPel` = case_when(
+      `Valor P - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor P - PPel` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),
+    
+    # Teste para Partos Prematuros espontâneos
+    `Valor P - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
+    `Conclusão do teste - PPes` = case_when(
+      `Valor P - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor P - PPes` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente")
+  )
+
+# Exibir a tabela
+tabela_tendencias_2015_2023 |>
+  kable()
+```
+
+Ao restringir a análise ao período de 2015 a 2023, o cenário se altera de maneira expressiva. O teste de Mann-Kendall revelou uma tendência altamente significativa de crescimento tanto para a taxa geral de prematuridade quanto para a prematuridade eletiva. Em contrapartida, a prematuridade espontânea, diferentemente do que foi observado no teste para a série histórica completa, não apresentou tendência significativa neste recorte.
+
+Esse resultado sugere que o aumento observado nas taxas de prematuridade geral e eletiva no período de 2015 a 2023 é estatisticamente robusto. Isso demonstra que o comportamento de crescimento nestas séries não é aleatório, apresentando um padrão de ascensão consistente e consolidado ao longo destes nove anos.
 
 ## Partos prematuros
 
@@ -230,16 +343,17 @@ tabela_tendencias_rras2 |>
   kable()
 ```
 
-# RRAS de São Paulo
+# RRAS do Estado de São Paulo
 
-## Nascidos vivos
+Para melhor visualização dos dados, foram destacadas apenas as RRAS que apresentaram tendências de mudança estatisticamente significativas nos testes de Mann-Kendall. As regiões que apresentaram estabilidade ou oscilações sem direção definida foram omitidas desta visualização para priorizar a análise dos locais onde o perfil da prematuridade está efetivamente se alterando.
 
-Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos por RRAS.
-
-```{r}
+```{r, include = FALSE}
 #| label: graficos-tendencias-rras1
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos por RRAS"
 
-# fig-cap: "Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos por RRAS"
+# Nascidos vivos
+# 
+# Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos por RRAS.
 
 # Gráfico para Partos Prematuros 
 highchart() |> 
@@ -276,7 +390,7 @@ highchart() |>
   hc_exporting(enabled = TRUE)
 ```
 
-```{r}
+```{r, include = FALSE}
 #| label: tabela-tendencias-rras1
 #| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais dos partos prematuros em relação aos nascidos vivos por RRAS"
 
@@ -319,14 +433,13 @@ tabela_tendencias_rras1 |>
   kable()
 ```
 
-## Partos prematuros
-
-Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS.
-
-```{r}
+```{r, include = FALSE}
 #| label: graficos-tendencias-rras2
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS"
 
-# fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS"
+# Partos prematuros
+# 
+# Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS.
 
 # Gráfico para Partos Prematuros Eletivos
 highchart() |>
@@ -351,7 +464,7 @@ highchart() |>
   hc_exporting(enabled = TRUE)
 ```
 
-```{r}
+```{r, include = FALSE}
 #| label: tabela-tendencias-rras2
 #| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS"
 
@@ -384,8 +497,6 @@ tabela_tendencias_rras2 <- dados_ano_rras |>
 tabela_tendencias_rras2 |>
   kable()
 ```
-
-# RRAS de São Paulo com tendência significativa
 
 ## Nascidos vivos
 
@@ -457,8 +568,7 @@ RRAS_sig_ppes_pp <- as.character(unique(sig_ppes_pp$RRAS))
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-pp-nv
-
-# fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos em relação ao total de nascidos vivos por RRAS"
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos em relação ao total de nascidos vivos por RRAS"
   
 # Gráfico para Partos Prematuros 
 dados_sig <- dados_ano_rras |> 
@@ -502,6 +612,8 @@ tabela_tendencias_rras1 <- dados_sig |>
 tabela_tendencias_rras1 |>
   kable()
 ```
+
+Na análise das taxas dos partos prematuros gerais em relação aos nascidos vivos, quatro regiões exibiram comportamentos significativos pelo teste de Mann-Kendall. No grupo que apresentou crescimento, destacaram-se as RRAS 09, 11 e 17. A RRAS 17 demonstrou a tendência de alta mais robusta e consistente do período (p \< 0,01), indicando um agravamento contínuo do indicador, enquanto a RRAS 09 encerrou a série histórica com a maior taxa entre as RRAS com estatística significativa (13,05%). Em contrapartida, a RRAS 12 foi a única região a apresentar uma tendência significativa de decréscimo, revertendo sua taxa inicial elevada (13,6% em 2012) para um patamar próximo ao da taxa estadual (11,743% em 2023).
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppel-nv
@@ -551,10 +663,11 @@ tabela_tendencias_rras1 |>
   kable()
 ```
 
+A análise das taxas de partos prematuros eletivos em relação aos nascidos vivos demonstrou que a tendência geral entre as RRAS que demonstraram variação estatisticamente significativa foi de crescimento. As RRAS 09, 10, 11, 16, 17 e 19 exibiram curvas ascendentes, indicando um aumento consistente na proporção de partos antecipados por intervenção médica nessas localidades. Destaca-se a RRAS 16, que apresentou a tendência de alta mais acentuada e significativa de todo o conjunto (p \< 0,001), seguida pelas RRAS 09 e 17, que também mostraram crescimento altamente significativo (p \< 0,01). Em contrapartida, a RRAS 03 foi a única região a registrar uma tendência significativa de queda neste indicador, divergindo dos padrões observados no restante do estado.
+
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppes-nv
-
-# fig-cap: "Séries temporais das porcentagens de partos prematuros espontâneos em relação ao total de nascidos vivos por RRAS"
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros espontâneos em relação ao total de nascidos vivos por RRAS"
 
 # Gráfico para Partos Prematuros Espontâneos
 dados_sig <- dados_ano_rras |> 
@@ -604,7 +717,6 @@ Séries temporais das porcentagens de partos prematuros eletivos e espontâneos 
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppel-pp
-
 # fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos em relação aos partos prematuros por RRAS"
 
 # Gráfico para Partos Prematuros Eletivos
@@ -644,7 +756,7 @@ tabela_tendencias_rras2 <- dados_sig |>
     .groups = 'drop'
   )
 
-tabela_tendencias_rras1 |>
+tabela_tendencias_rras2 |>
   kable()
 ```
 
