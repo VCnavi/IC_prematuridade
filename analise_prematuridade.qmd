@@ -369,7 +369,7 @@ A análise não evidenciou tendências estatisticamente significativas na porcen
 
 # RRAS do Estado de São Paulo
 
-Para melhor visualização dos dados, foram destacadas apenas as RRAS que apresentaram tendências de mudança estatisticamente significativas nos testes de Mann-Kendall. As regiões que apresentaram estabilidade ou oscilações sem direção definida foram omitidas desta visualização para priorizar a análise dos locais onde o perfil da prematuridade está efetivamente se alterando.
+Para melhor visualização dos dados, foram destacadas apenas as RRAS que apresentaram tendências de mudanças estatisticamente significativas nos testes de Mann-Kendall. As regiões que apresentaram estabilidade ou oscilações sem direção definida foram omitidas desta visualização para priorizar a análise dos locais onde o perfil da prematuridade está efetivamente se alterando.
 
 ```{r, include = FALSE}
 #| label: graficos-tendencias-rras1
