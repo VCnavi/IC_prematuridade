@@ -39,8 +39,8 @@ tab <- "
 | Sem informação                           | Sem informação                               | Não tem como avaliar      |
 | Sem informação                           | Não                                          | Não tem como avaliar      |
 | Sem informação                           | Sim                                          | Eletivo                   |
-| Sim                                      | Sem informação                               | Não tem como avaliar      |
-| Não                                      | Sem informação                               | Eletivo|
+| Não                                      | Sem informação                               | Não tem como avaliar      |
+| Sim                                      | Sem informação                               | Eletivo                   |
 : Classificação do tipo de parto
 "
 cat(tab)
@@ -78,7 +78,7 @@ Os resultados são apresentados no relatório sob a forma de valores de P relaci
 
 ## Nascidos vivos
 
-```{r}
+```{r, warning=FALSE}
 # Pacotes
 library(trend)
 library(dplyr)
@@ -103,7 +103,7 @@ dados_carac <- read_excel("f2_tabelas/tabela_prematuridade_por_ano_e_rras.xlsx")
 
 dados_carac_obito <- read_excel("f2_tabelas/tabela_obitos_por_variavel_ano_e_rras.xlsx")
 
-# limppezas
+# limpezas
 dados_ano_rras <- dados_ano_rras |> 
     mutate(RRAS = factor(RRAS, 
                        levels = c("RRAS1", "RRAS2", "RRAS3", "RRAS4", "RRAS5", 
@@ -123,6 +123,9 @@ dados_carac_obito <- dados_carac_obito |>
          VALUE!= "NA",
          VALUE != "Ignorado",
          VALUE != "99")
+
+# dados perdidos
+dados_ano$taxa_PPna_por_PP <- 100 - (dados_ano$taxa_PPel_por_PP + dados_ano$taxa_PPes_por_PP)
 ```
 
 Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos.
@@ -137,34 +140,20 @@ highchart() |>
                 type = "line",
                 hcaes(x = ANO, y = round(taxa_PP, 3)),
                 name = "PP") |> 
-  hc_xAxis(title = list(text = "Ano")) |> 
-  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
-  hc_title(text = "Porcentagem de partos prematuros dentre todos os nascidos vivos") |> 
-  hc_tooltip(shared = FALSE) |> 
-  hc_exporting(enabled = TRUE)
-
 # Gráfico para Partos Prematuros Eletivos
-highchart() |>
   hc_add_series(dados_ano, 
                 type = "line",
                 hcaes(x = ANO, y = round(taxa_PPel_por_NV, 3)),
                 name = "PPel") |>
-  hc_xAxis(title = list(text = "Ano")) |>
-  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
-  hc_title(text = "Porcentagem de partos prematuros eletivos dentre todos os nascidos vivos") |>
-  hc_tooltip(shared = FALSE) |>
-  hc_exporting(enabled = TRUE)
-
 # Gráfico para Partos Prematuros Espontâneos
-highchart() |>
   hc_add_series(dados_ano, 
                 type = "line",
                 hcaes(x = ANO, y = round(taxa_PPes_por_NV, 3)),
                 name = "PPes") |>
   hc_xAxis(title = list(text = "Ano")) |>
   hc_yAxis(title = list(text = "Porcentagem (%)")) |>
-  hc_title(text = "Porcentagem de partos prematuros espontâneos dentre todos os nascidos vivos") |>
-  hc_tooltip(shared = FALSE) |>
+  hc_title(text = "Porcentagem de partos prematuros, prematuros espontâneos e eletivos dentre todos os nascidos vivos") |>
+  hc_tooltip(shared = FALSE, valueSuffix = "%") |>
   hc_exporting(enabled = TRUE)
 ```
 
@@ -174,34 +163,30 @@ highchart() |>
 
 # Criar tabela com resultados para todas as variáveis
 tabela_tendencias_rras2 <- dados_ano |>
+  # 1. Transformamos as colunas de taxas em linhas (formato longo)
+  pivot_longer(
+    cols = c(taxa_PP, taxa_PPel_por_NV, taxa_PPes_por_NV),
+    names_to = "Indicador",
+    values_to = "Valor"
+  ) |>
+  # 2. Renomeamos os indicadores para ficar como você pediu (PP, PPel, PPes)
+  mutate(Indicador = case_when(
+    Indicador == "taxa_PP" ~ "PP",
+    Indicador == "taxa_PPel_por_NV" ~ "PPel",
+    Indicador == "taxa_PPes_por_NV" ~ "PPes"
+  )) |>
+  # 3. Agrupamos para calcular as estatísticas por indicador
+  group_by(Indicador) |>
   summarise(
+    `Valor p` = round(mk.test(Valor)$p.value, 5),
     
-    # Teste para Partos Prematuros 
-    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
-    `Conclusão do teste - PP` = case_when(
-      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PP` < 0.05 ~ "Significativa",
+    `Conclusão do teste` = case_when(
+      `Valor p` < 0.01 ~ "Altamente Significativa",
+      `Valor p` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
-    `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),
     
-        # Teste para Partos Prematuros Eletivos
-    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
-    `Conclusão do teste - PPel` = case_when(
-      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PPel` < 0.05 ~ "Significativa",
-      TRUE ~ "Não Significativa"
-    ),
-    `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),
-    
-    # Teste para Partos Prematuros espontâneos
-    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
-    `Conclusão do teste - PPes` = case_when(
-      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PPes` < 0.05 ~ "Significativa",
-      TRUE ~ "Não Significativa"
-    ),
-    `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente"),
+    `Direção` = ifelse(sens.slope(Valor)$estimates > 0, "Crescente", "Decrescente")
   )
 
 tabela_tendencias_rras2 |>
@@ -212,7 +197,7 @@ Ao analisar a série histórica completa (2012-2023), observou-se uma tendência
 
 Por ter-se observado que os demais gráficos apresentavam uma aparente consistência a partir do ano de 2015, foi realizado um recorte da série histórica para esses dados, com o intuito de testar as hipóteses de que, dentro desse recorte, os dados apresentavam um aumento consistente em suas variações.
 
-## Recorte de 2015 à 2023 para Nascidos Vivos
+## Recorte de 2015 à 2023 para nascidos vivos
 
 ```{r}
 #| label: graficos-tendencias-recorte
@@ -226,34 +211,20 @@ highchart() |>
                 type = "line", 
                 hcaes(x = ANO, y = round(taxa_PP, 3)), 
                 name = "PP") |> 
-  hc_xAxis(title = list(text = "Ano")) |> 
-  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
-  hc_title(text = "Porcentagem de partos prematuros (2015-2023)") |> 
-  hc_tooltip(shared = FALSE) |> 
-  hc_exporting(enabled = TRUE)
-
 # Gráfico para Partos Prematuros Eletivos (PPel) - 2015 a 2023
-highchart() |> 
   hc_add_series(dados_recorte, 
                 type = "line", 
                 hcaes(x = ANO, y = round(taxa_PPel_por_NV, 3)), 
                 name = "PPel") |> 
-  hc_xAxis(title = list(text = "Ano")) |> 
-  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
-  hc_title(text = "Porcentagem de partos prematuros eletivos (2015-2023)") |> 
-  hc_tooltip(shared = FALSE) |> 
-  hc_exporting(enabled = TRUE)
-
 # Gráfico para Partos Prematuros Espontâneos (PPes) - 2015 a 2023
-highchart() |> 
   hc_add_series(dados_recorte, 
                 type = "line", 
                 hcaes(x = ANO, y = round(taxa_PPes_por_NV, 3)), 
                 name = "PPes") |> 
-  hc_xAxis(title = list(text = "Ano")) |> 
-  hc_yAxis(title = list(text = "Porcentagem (%)")) |> 
-  hc_title(text = "Porcentagem de partos prematuros espontâneos (2015-2023)") |> 
-  hc_tooltip(shared = FALSE) |> 
+  hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Distribuição dos partos prematuros, prematuros eletivos e prematuros espontâneos dentre os nascidos vivos") |>
+  hc_tooltip(shared = FALSE, valueSuffix = "%") |>
   hc_exporting(enabled = TRUE)
 ```
 
@@ -261,34 +232,31 @@ highchart() |>
 #| label: tabela-tendencias-recorte
 #| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros por nascidos vivos nos anos de 2015 à 2023"
 tabela_tendencias_2015_2023 <- dados_recorte |>
+  # 1. Transforma as colunas largas em formato longo
+  pivot_longer(
+    cols = c(taxa_PP, taxa_PPel_por_NV, taxa_PPes_por_NV),
+    names_to = "Indicador",
+    values_to = "Valor"
+  ) |>
+  # 2. Renomeia os indicadores para nomes mais curtos
+  mutate(Indicador = case_when(
+    Indicador == "taxa_PP" ~ "PP",
+    Indicador == "taxa_PPel_por_NV" ~ "PPel",
+    Indicador == "taxa_PPes_por_NV" ~ "PPes"
+  )) |>
+  # 3. Agrupa por indicador para fazer os cálculos separadamente
+  group_by(Indicador) |>
+  # 4. Aplica os testes estatísticos
   summarise(
+    `Valor p` = round(mk.test(Valor)$p.value, 5),
     
-    # Teste para Partos Prematuros 
-    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
-    `Conclusão do teste - PP` = case_when(
-      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PP` < 0.05 ~ "Significativa",
+    `Conclusão do teste` = case_when(
+      `Valor p` < 0.01 ~ "Altamente Significativa",
+      `Valor p` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
-    `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),
     
-    # Teste para Partos Prematuros Eletivos
-    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
-    `Conclusão do teste - PPel` = case_when(
-      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PPel` < 0.05 ~ "Significativa",
-      TRUE ~ "Não Significativa"
-    ),
-    `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),
-    
-    # Teste para Partos Prematuros espontâneos
-    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
-    `Conclusão do teste - PPes` = case_when(
-      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PPes` < 0.05 ~ "Significativa",
-      TRUE ~ "Não Significativa"
-    ),
-    `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente")
+    `Direção` = ifelse(sens.slope(Valor)$estimates > 0, "Crescente", "Decrescente")
   )
 
 # Exibir a tabela
@@ -298,7 +266,7 @@ tabela_tendencias_2015_2023 |>
 
 Ao restringir a análise ao período de 2015 a 2023, o cenário se altera de maneira expressiva. O teste de Mann-Kendall revelou uma tendência altamente significativa de crescimento tanto para a taxa geral de prematuridade quanto para a prematuridade eletiva. Em contrapartida, a prematuridade espontânea, diferentemente do que foi observado no teste para a série histórica completa, não apresentou tendência significativa neste recorte.
 
-Esse resultado sugere que o aumento observado nas taxas de prematuridade geral e eletiva no período de 2015 a 2023 é estatisticamente robusto. Isso demonstra que o comportamento de crescimento nestas séries não é aleatório, apresentando um padrão de ascensão consistente e consolidado ao longo destes nove anos.
+Esse resultado sugere que o aumento observado nas taxas de prematuridade geral e eletiva no período de 2015 a 2023 é estatisticamente robusto. Isso demonstra que o comportamento de crescimento nessas séries não é aleatório, apresentando um padrão de ascensão consistente e consolidado ao longo destes nove anos.
 
 ## Partos prematuros
 
@@ -309,28 +277,29 @@ Séries temporais das porcentagens de partos prematuros eletivos e espontâneos 
 
 # fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros"
 
-# Gráfico para Partos Prematuros Eletivos
+# Partos Prematuros Eletivos
 highchart() |>
   hc_add_series(dados_ano, 
                 type = "line",
                 hcaes(x = ANO, y = round(taxa_PPel_por_PP, 3)),
                 name = "PPel") |>
-  hc_xAxis(title = list(text = "Ano")) |>
-  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
-  hc_title(text = "Porcentagem de partos prematuros eletivos dentre todos os partos prematuros") |>
-  hc_tooltip(shared = FALSE) |>
-  hc_exporting(enabled = TRUE)
-
-# Gráfico para Partos Prematuros Espontâneos
-highchart() |>
+# Partos Prematuros Espontâneos
   hc_add_series(dados_ano, 
                 type = "line",
                 hcaes(x = ANO, y = round(taxa_PPes_por_PP, 3)),
                 name = "PPes") |>
-  hc_xAxis(title = list(text = "Ano")) |>
+# Dados perdidos
+  hc_add_series(dados_ano, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPna_por_PP, 3)),
+                name = "Impossível avaliar",
+                color = "gray",      
+                dashStyle = "ShortDash") |>
+  
+hc_xAxis(title = list(text = "Ano")) |>
   hc_yAxis(title = list(text = "Porcentagem (%)")) |>
-  hc_title(text = "Porcentagem de partos prematuros espontâneos dentre todos os partos prematuros") |>
-  hc_tooltip(shared = FALSE) |>
+  hc_title(text = "Distribuição dos tipos de partos prematuros: eletivos, espontâneos") |>
+  hc_tooltip(shared = FALSE, valueSuffix = "%") |>
   hc_exporting(enabled = TRUE)
 ```
 
@@ -339,26 +308,31 @@ highchart() |>
 #| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros eletivos e espontâneos por partos prematuros"
 
 # Criar tabela com resultados para ambas as variáveis
-tabela_tendencias_rras2 <- dados_ano |> 
+tabela_tendencias_rras2 <- dados_ano |>
+  # 1. Transformar as colunas de taxas em linhas (empilhar os dados)
+  pivot_longer(
+    cols = c(taxa_PPel_por_PP, taxa_PPes_por_PP, taxa_PPna_por_PP),
+    names_to = "Indicador",
+    values_to = "Valor"
+  ) |>
+  # 2. Renomear os indicadores para facilitar a leitura (PPel, PPes, PPna)
+  mutate(Indicador = case_when(
+    Indicador == "taxa_PPel_por_PP" ~ "PPel",
+    Indicador == "taxa_PPes_por_PP" ~ "PPes",
+    Indicador == "taxa_PPna_por_PP" ~ "PPna"
+  )) |>
+  # 3. Agrupar por indicador para realizar o teste Mann-Kendall separadamente
+  group_by(Indicador) |>
   summarise(
+    `Valor p` = round(mk.test(Valor)$p.value, 5),
     
-        # Teste para Partos Prematuros Eletivos
-    `Valor p - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
-    `Conclusão do teste - PPel` = case_when(
-      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PPel` < 0.05 ~ "Significativa",
+    `Conclusão do teste` = case_when(
+      `Valor p` < 0.01 ~ "Altamente Significativa",
+      `Valor p` < 0.05 ~ "Significativa",
       TRUE ~ "Não Significativa"
     ),
-    `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_PP)$estimates > 0, "Crescente", "Decrescente"),
     
-    # Teste para Partos Prematuros espontâneos
-    `Valor p - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
-    `Conclusão do teste - PPes` = case_when(
-      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
-      `Valor p - PPes` < 0.05 ~ "Significativa",
-      TRUE ~ "Não Significativa"
-    ),
-    `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_PP)$estimates > 0, "Crescente", "Decrescente"),
+    `Direção` = ifelse(sens.slope(Valor)$estimates > 0, "Crescente", "Decrescente")
   )
 
 tabela_tendencias_rras2 |>
@@ -367,13 +341,79 @@ tabela_tendencias_rras2 |>
 
 A análise não evidenciou tendências estatisticamente significativas na porcentagem de partos prematuros eletivos ou espontâneos em relação aos partos prematuros.
 
+## Recorte de 2015 à 2023 para partos prematuros
+
+```{r}
+#| label: graficos-tendencias-recorte2
+
+# fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros nos anos de 2015 à 2023"
+
+# Partos Prematuros Eletivos
+highchart() |>
+  hc_add_series(dados_recorte, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPel_por_PP, 3)),
+                name = "PPel") |>
+# Partos Prematuros Espontâneos
+  hc_add_series(dados_recorte, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPes_por_PP, 3)),
+                name = "PPes") |>
+# Dados perdidos
+  hc_add_series(dados_recorte, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPna_por_PP, 3)),
+                name = "Impossível avaliar",
+                color = "gray",      
+                dashStyle = "ShortDash") |>
+  
+hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Distribuição dos tipos de partos prematuros: eletivos, espontâneos") |>
+  hc_tooltip(shared = FALSE, valueSuffix = "%") |>
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-recorte2
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros eletivos e espontâneos por partos prematuros nos anos de 2015 à 2023"
+
+tabela_tendencias_rras_2015_2023 <- dados_recorte |>
+  pivot_longer(
+    cols = c(taxa_PPel_por_PP, taxa_PPes_por_PP, taxa_PPna_por_PP),
+    names_to = "Indicador",
+    values_to = "Valor"
+  ) |>
+  mutate(Indicador = case_when(
+    Indicador == "taxa_PPel_por_PP" ~ "PPel",
+    Indicador == "taxa_PPes_por_PP" ~ "PPes",
+    Indicador == "taxa_PPna_por_PP" ~ "PPna"
+  )) |>
+  group_by(Indicador) |>
+  summarise(
+    `Valor p` = round(mk.test(Valor)$p.value, 5),
+    
+    `Conclusão do teste` = case_when(
+      `Valor p` < 0.01 ~ "Altamente Significativa",
+      `Valor p` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    
+    `Direção` = ifelse(sens.slope(Valor)$estimates > 0, "Crescente", "Decrescente")
+  )
+
+tabela_tendencias_rras_2015_2023 |>
+  kable()
+```
+
+Novamente, análise não evidenciou tendências estatisticamente significativas na porcentagem de partos prematuros eletivos ou espontâneos em relação aos partos prematuros. Porém, nesse recorte de tempo, é possível observar que as aparentes direções das tendências dos partos prematuros eletivos e prematuros espontâneos foi invertida.
+
 # RRAS do Estado de São Paulo
 
-Para melhor visualização dos dados, foram destacadas apenas as RRAS que apresentaram tendências de mudanças estatisticamente significativas nos testes de Mann-Kendall. As regiões que apresentaram estabilidade ou oscilações sem direção definida foram omitidas desta visualização para priorizar a análise dos locais onde o perfil da prematuridade está efetivamente se alterando.
+Os gráficos de todas as RRAS serão apresentados nessa seção, porém, para melhor interpretação dos dados, foram destacados e interpretados apenas os dados das RRAS que apresentaram tendências de mudanças estatisticamente significativas nos testes de Mann-Kendall. As regiões que apresentaram estabilidade ou oscilações sem direção definida foram omitidas das análises para priorizar os locais onde o perfil da prematuridade está efetivamente se alterando.
 
-```{r, include = FALSE}
+```{r}
 #| label: graficos-tendencias-rras1
-#| fig-cap: "Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos por RRAS"
 
 # Nascidos vivos
 # 
@@ -457,9 +497,8 @@ tabela_tendencias_rras1 |>
   kable()
 ```
 
-```{r, include = FALSE}
+```{r}
 #| label: graficos-tendencias-rras2
-#| fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS"
 
 # Partos prematuros
 # 
@@ -739,6 +778,232 @@ A análise das taxas de partos prematuros espontâneos em relação aos nascidos
 
 Destaca-se a RRAS 17, que apresentou uma tendência de crescimento altamente significativa (p = 0.00127), sendo a mais acentuada neste indicador. A RRAS 16 foi a única região a registrar uma tendência altamente significativa de queda (p = 0.00319), divergindo claramente do padrão de crescimento observado na maioria das demais localidades. As demais RRAS (01, 08, 10 e 15) mostraram um crescimento significativo, consolidando a tendência geral de aumento dos partos prematuros espontâneos no estado.
 
+## Recorte de 2015 à 2023 para nascidos vivos 
+
+Séries temporais das porcentagens de partos prematuros, partos prematuros eletivos e espontâneos em relação ao total de nascidos vivos por RRAS que apresentaram, no recorte de 2015 à 2023, tendência significativa segundo o teste de Mann--Kendall.
+
+```{r}
+# Taxas por nascidos vivos
+dados_recorte_rras <- dados_ano_rras |> 
+  filter(ANO >= 2015 & ANO <= 2023)
+
+sig_pp <- dados_recorte_rras |> 
+  select(ANO, RRAS, taxa_PP, taxa_PPel_por_NV, taxa_PPes_por_NV) |> 
+  group_by(RRAS) |> 
+  mutate(
+    test_pp = mk.test(taxa_PP)$p.value,
+    test_ppel = mk.test(taxa_PPel_por_NV)$p.value,
+    test_ppes = mk.test(taxa_PPes_por_NV)$p.value
+  ) |> 
+  filter(test_pp < 0.05)
+
+RRAS_sig_pp <- as.character(unique(sig_pp$RRAS))
+
+sig_ppel_nv <- dados_recorte_rras |>
+  select(ANO, RRAS, taxa_PP, taxa_PPel_por_NV, taxa_PPes_por_NV) |>
+  group_by(RRAS) |>
+  mutate(
+    test_pp = mk.test(taxa_PP)$p.value,
+    test_ppel = mk.test(taxa_PPel_por_NV)$p.value,
+    test_ppes = mk.test(taxa_PPes_por_NV)$p.value
+  ) |>
+  filter(test_ppel < 0.05)
+  
+RRAS_sig_ppel_nv <- as.character(unique(sig_ppel_nv$RRAS))
+
+sig_ppes_nv <- dados_recorte_rras |>
+  select(ANO, RRAS, taxa_PP, taxa_PPel_por_NV, taxa_PPes_por_NV) |>
+  group_by(RRAS) |>
+  mutate(
+    test_pp = mk.test(taxa_PP)$p.value,
+    test_ppel = mk.test(taxa_PPel_por_NV)$p.value,
+    test_ppes = mk.test(taxa_PPes_por_NV)$p.value
+  ) |>
+  filter(test_ppes < 0.05)
+  
+RRAS_sig_ppes_nv <- as.character(unique(sig_ppes_nv$RRAS))
+```
+
+```{r}
+# Taxas por partos prematuros
+sig_ppel_pp <- dados_recorte_rras |>
+  select(ANO, RRAS, taxa_PPel_por_PP, taxa_PPes_por_PP) |>
+  group_by(RRAS) |>
+  mutate(
+    test_ppel = mk.test(taxa_PPel_por_PP)$p.value,
+    test_ppes = mk.test(taxa_PPes_por_PP)$p.value
+  ) |>
+  filter(test_ppel < 0.05)
+  
+RRAS_sig_ppel_pp <- as.character(unique(sig_ppel_pp$RRAS))
+
+sig_ppes_pp <- dados_recorte_rras |>
+  select(ANO, RRAS, taxa_PPel_por_PP, taxa_PPes_por_PP) |>
+  group_by(RRAS) |>
+  mutate(
+    test_ppel = mk.test(taxa_PPel_por_PP)$p.value,
+    test_ppes = mk.test(taxa_PPes_por_PP)$p.value
+  ) |>
+  filter(test_ppes < 0.05)
+  
+RRAS_sig_ppes_pp <- as.character(unique(sig_ppes_pp$RRAS))
+```
+
+```{r}
+#| label: graficos-tendencias-rras-sig-pp-nv-2015-2023
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos em relação ao total de nascidos vivos por RRAS 2015-2023"
+  
+# Gráfico para Partos Prematuros 
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_pp)
+
+highchart() |>
+  hc_add_series(dados_sig, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PP, 3), group = RRAS)) |>
+  hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Porcentagem de partos prematuros dentre todos os nascidos vivos") |>
+  hc_tooltip(shared = FALSE) |>
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-rras-sig-pp-nv-2015-2023
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais dos partos prematuros em relação aos nascidos vivos por RRAS 2015-2023"
+
+# Criar tabela com resultados para ambas as variáveis
+# Teste para Partos Prematuros Eletivos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_pp)
+
+tabela_tendencias_rras1 <- dados_sig |> 
+  group_by(RRAS) |> 
+  summarise(
+    
+    `Valor p - PP` = round(mk.test(taxa_PP)$p.value, 5),
+    `Conclusão do teste - PP` = case_when(
+      `Valor p - PP` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PP` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PP` = ifelse(sens.slope(taxa_PP)$estimates > 0, "Crescente", "Decrescente"),       
+    
+    .groups = 'drop'
+  )
+
+tabela_tendencias_rras1 |>
+  kable()
+```
+
+Comparando com os resultados analisados fora do período de 2015 a 2023, a RRAS 17 continua apresentando o caso de agravamento mais severo, validando a tendência de alta mais robusta vista anteriormente, assim como o crescimento da RRAS 09, mantendo-se como uma tendência estatisticamente significativa.
+
+No entanto, ainda na comparação, o recorte indica um cenário de prematuridade mais crítico e abrangente do que o do período completo. Divergindo do que foi visto anteriormente, em que apenas três RRAS apresentavam crescimento e uma apresentava queda, a tabela revela que 12 regiões apresentaram tendência significativa, sendo todas na direção crescente. Além disso, visualmente, as RRAS 05 e 19 encerram o período com taxas superiores às da RRAS 09, diferindo da primeira análise, em que esta última seria a região com o maior índice entre as estatisticamente relevantes.
+
+Além disso, percebe-se que as RRAS 11 e 12 não estão presentes nesse recorte, revelando que, dentro desse período, essas regiões podem ter apresentado estabilidade ou não apresentaram uma tendência clara de crescimento ou decréscimo.
+
+```{r}
+#| label: graficos-tendencias-rras-sig-ppel-nv-2015-2023
+
+# fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos em relação ao total de nascidos vivos por RRAS 2015-2023"
+  
+# Gráfico para Partos Prematuros Eletivos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppel_nv)
+
+highchart() |>
+  hc_add_series(dados_sig, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPel_por_NV, 3), group = RRAS)) |>
+  hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Porcentagem de partos prematuros eletivos dentre todos os nascidos vivos") |>
+  hc_tooltip(shared = FALSE) |>
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-rras-sig-ppel-nv-2015-2023
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais dos partos prematuros eletivos em relação aos nascidos vivos por RRAS 2015-2023"
+
+# Criar tabela com resultados para ambas as variáveis
+# Teste para Partos Prematuros Eletivos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppel_nv)
+
+tabela_tendencias_rras1 <- dados_sig |> 
+  group_by(RRAS) |> 
+  summarise(
+    
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_NV)$p.value, 5),
+    `Conclusão do teste - PPel` = case_when(
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_NV)$estimates > 0, "Crescente", "Decrescente"),       
+    
+    .groups = 'drop'
+  )
+
+tabela_tendencias_rras1 |>
+  kable()
+```
+
+Os dados do período de 2015 a 2023 validam a tendência geral de crescimento dos partos prematuros eletivos, corroborando o destaque dado à RRAS 16. A tabela confirma que esta região obteve uma alta significâncias (p=0.00058), visualmente representada por uma curva acentuada, especialmente entre 2021 e 2022. A RRAS 09 também mantém sua tendência dentro desse período ao comparar os resultados obtidos anteriormente.
+
+Contudo, há divergências importantes na identificação das regiões críticas. No período completo, a RRAS 5 foi omitida, enquanto aqui ela é apresentada com o mesmo nível de significância da RRAS 16 (p=0.00058) e uma curva consistentemente elevada. Além disso, as RRAS 10, 11 e 19 são vistas com tendências significativas previamente, porém não aparecem nos resultados significativos deste recorte temporal, enquanto aqui são incluídas as RRAS 4, 13 e 15.
+
+```{r}
+#| label: graficos-tendencias-rras-sig-ppes-nv-2015-2023
+#| fig-cap: "Séries temporais das porcentagens de partos prematuros espontâneos em relação ao total de nascidos vivos por RRAS 2015-2023"
+
+# Gráfico para Partos Prematuros Espontâneos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppes_nv)
+
+highchart() |>
+  hc_add_series(dados_sig, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPes_por_NV, 3), group = RRAS)) |>
+  hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Porcentagem de partos prematuros espontâneos dentre todos os nascidos vivos") |>
+  hc_tooltip(shared = FALSE) |>
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-rras-sig-ppes-nv-2015-2023
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais dos partos prematuros espontâneos em relação aos nascidos vivos por RRAS 2015-2023"
+
+ # Teste para Partos Prematuros espontâneos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppes_nv)
+
+    tabela_tendencias_rras1 <- dados_sig |> 
+  group_by(RRAS) |> 
+  summarise(
+    
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_NV)$p.value, 5),
+    `Conclusão do teste - PPes` = case_when(
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_NV)$estimates > 0, "Crescente", "Decrescente"),
+    
+           .groups = 'drop'
+  )
+
+tabela_tendencias_rras1 |>
+  kable()
+```
+
+A análise comparativa revela mais diferenças entre os resultados do período completo e do recorte de 2015 a 2023. Embora a tendência de crescimento da RRAS 17 seja confirmada, o valor-p observado no recorte (0.01649) diverge do visto anteriormente (0.00127), classificando-a como "Significativa" e não "Altamente Significativa", perdendo parte de sua significância. Adicionalmente, na análise prévia foi observada a tendência de crescimento nas RRAS 01, 08, 10 e 15, que não figuram nos resultados apresentados nesse período, enquanto a RRAS 18, que não apareceu antes, agora indica tendência de alta significativa, apesar de próxima do limite (p = 0.05).
+
+A divergência mais crítica se encontra na identificação da região com redução de casos. Foi analisado que a RRAS 16 era a única com tendência de queda para os casos de prematuridade espontânea entre os nascidos vivos, porém, os dados mostram exclusivamente a RRAS 03 com direção "Decrescente" e estatisticamente significativa (p = 0.02857), o que contradiz o que foi observado para o período completo.
+
 ## Partos prematuros
 
 Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS que apresentaram tendência significativa segundo o teste de Mann--Kendall.
@@ -822,7 +1087,7 @@ highchart() |>
 dados_sig <- dados_ano_rras |> 
   filter(RRAS %in% RRAS_sig_ppes_pp)
 
-    tabela_tendencias_rras2 <- dados_sig |> 
+tabela_tendencias_rras2 <- dados_sig |> 
   group_by(RRAS) |> 
   summarise(
     
@@ -847,3 +1112,108 @@ A análise da participação relativa dos partos prematuros espontâneos dentro 
 A RRAS 1 foi a única a registrar uma tendência significativa de crescimento (p = 0.04674) neste indicador, indicando que a prematuridade espontânea tem representado uma parcela cada vez maior dos partos prematuros nesta região.
 
 Em contrapartida, as RRAS 16 e 19 exibiram tendências decrescentes. A RRAS 16 se destacou com uma queda altamente significativa (p = 0.00127). A RRAS 19 também seguiu essa trajetória de redução, porém em um patamar significativo (p = 0.04674).
+
+## Recorte de 2015 à 2023 partos prematuros
+
+Séries temporais das porcentagens de partos prematuros eletivos e espontâneos em relação aos partos prematuros por RRAS que apresentaram, no recorte de 2015 à 2023, tendência significativa segundo o teste de Mann--Kendall.
+
+```{r}
+#| label: graficos-tendencias-rras-sig-ppel-pp-2015-2023
+# fig-cap: "Séries temporais das porcentagens de partos prematuros eletivos em relação aos partos prematuros por RRAS 2015-2023"
+
+# Gráfico para Partos Prematuros Eletivos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppel_pp)
+
+highchart() |>
+  hc_add_series(dados_sig, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPel_por_PP, 3), group = RRAS)) |>
+  hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Porcentagem de partos prematuros eletivos dentre todos os partos prematuros") |>
+  hc_tooltip(shared = FALSE) |>
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-rras-sig-ppel-pp-2015-2023
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros eletivos em relação aos partos prematuros por RRAS 2015-2023"
+# Teste para Partos Prematuros Eletivos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppel_pp)
+
+tabela_tendencias_rras2 <- dados_sig |> 
+  group_by(RRAS) |> 
+  summarise(
+    
+    `Valor p - PPel` = round(mk.test(taxa_PPel_por_PP)$p.value, 5),
+    `Conclusão do teste - PPel` = case_when(
+      `Valor p - PPel` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPel` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PPel` = ifelse(sens.slope(taxa_PPel_por_PP)$estimates > 0, "Crescente", "Decrescente"),       
+    
+    .groups = 'drop'
+  )
+
+tabela_tendencias_rras2 |>
+  kable()
+```
+
+A análise comparativa entre o período completo e o recorte de 2015 a 2023 valida a observação de que RRAS 16 pode ser vista como o principal destaque de aumento na proporção de partos prematuros eletivos, onde sua tendência se mantém como "Altamente Significativa" ((p = 0.00058). Da mesma forma, a tendência de queda da RRAS 1 se mantém "Altamente Significativa" (p = 0.00915), alinhada à redução mencionada na análise anterior.
+
+Entretanto, a principal diferença entre esses períodos é a composição das RRAS com tendências significativas. Enquanto anteriormente foi averiguado crescimento nas RRAS 9, 10 e 11 e queda na RRAS 8, estas regiões deixaram de apresentar significância estatística na janela 2015-2023, desaparecendo dos resultados. Em contrapartida, os dados revelam as tendências das RRAS 4 e RRAS 5, sendo elas de crescimento estatisticamente relevantes (com a RRAS 04 sendo altamente significativa, p = 0.00915).
+
+```{r}
+#| label: graficos-tendencias-rras-sig-ppes-pp-2015-2023
+
+# fig-cap: "Séries temporais das porcentagens de partos prematuros espontâneos em relação aos partos prematuros por RRAS 2015-2023"
+
+# Gráfico para Partos Prematuros Espontâneos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppes_pp)
+
+highchart() |>
+  hc_add_series(dados_sig, 
+                type = "line",
+                hcaes(x = ANO, y = round(taxa_PPes_por_PP, 3), group = RRAS)) |>
+  hc_xAxis(title = list(text = "Ano")) |>
+  hc_yAxis(title = list(text = "Porcentagem (%)")) |>
+  hc_title(text = "Porcentagem de partos prematuros espontâneos dentre todos os partos prematuros") |>
+  hc_tooltip(shared = FALSE) |>
+  hc_exporting(enabled = TRUE)
+```
+
+```{r}
+#| label: tabela-tendencias-rras-sig-ppes-pp-2015-2023
+#| tbl-cap: "Resultados do teste de Mann-Kendall para tendências temporais da porcentagem de partos prematuros espontâneos em relação aos partos prematuros por RRAS 2015-2023"
+    
+ # Teste para Partos Prematuros espontâneos
+dados_sig <- dados_recorte_rras |> 
+  filter(RRAS %in% RRAS_sig_ppes_pp)
+
+tabela_tendencias_rras2 <- dados_sig |> 
+  group_by(RRAS) |> 
+  summarise(
+    
+    `Valor p - PPes` = round(mk.test(taxa_PPes_por_PP)$p.value, 5),
+    `Conclusão do teste - PPes` = case_when(
+      `Valor p - PPes` < 0.01 ~ "Altamente Significativa",
+      `Valor p - PPes` < 0.05 ~ "Significativa",
+      TRUE ~ "Não Significativa"
+    ),
+    `Direção - PPes` = ifelse(sens.slope(taxa_PPes_por_PP)$estimates > 0, "Crescente", "Decrescente"),
+    
+           .groups = 'drop'
+  )
+
+tabela_tendencias_rras2 |>
+  kable()
+
+```
+
+Ao contrastar a análise completa com o recorte de 2015 a 2023, observa-se uma mudança drástica, onde apenas a RRAS 16 manteve uma tendência significativa de queda, porém com uma significância estatística menor (p = 0.02857), enquanto as RRAS 1 e 19 não apresentaram tendência significativa nesse recorte, não constando na tabela atual. Para o caso da RRAS 19, há uma curva de crescimento brusca da taxa de partos prematuros espontâneos entre 2017 e 2019, o que pode ter feito com que o teste de Mann-Kendall não tenha observado a direção decrescente que a RRAS apresentava anteriormente. Enquanto isso, para o caso da RRAS 1, a série parece se manter mais estável nesse período, perdendo uma leve curva crescente vista entre 2012 e 2015.
+
+Além disso, o recorte de 2015 a 2023 indica que as RRAS 02, 03 e 05 surgem com tendências de queda significativas, com destaque para a RRAS 02, que agora apresenta a redução mais robusta da taxa de partos prematuros espontâneos dentre os partos prematuros (p = 0.00915), algo não observado na análise de longo prazo.
