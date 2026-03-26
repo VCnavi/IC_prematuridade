@@ -60,17 +60,17 @@ variaveis_sim <- c("DTOBITO","CODMUNRES","CODMUNOCOR","GESTACAO","SEMAGESTAC",
 
 dados <- fetch_datasus(
   year_start = 2012,
-  year_end = 2023,
-  uf = "SP", 
+  year_end = 2024,
+  uf = "SP",
   information_system = "SINASC",
   vars = variaveis_sinasc)
 
-write.csv(dados, "dados_SINASC.csv")
+write.csv(dados, "f1_data-raw/dados_SINASC.csv")
 
 dados <- fetch_datasus(
   year_start = 2012,
-  year_end = 2023,
+  year_end = 2024,
   information_system = "SIM-DOFET",
   vars = variaveis_sim)
 
-write.csv(dados, "dados_SIM.csv")
+write.csv(dados, "f1_data-raw/dados_SIM.csv")

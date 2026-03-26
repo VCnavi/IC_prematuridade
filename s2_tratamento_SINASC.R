@@ -4,6 +4,8 @@ library(data.table)
 library(writexl)
 library(readxl)
 library(abjutils)
+library(stringr)
+library(gtools)
 
 # códigos municipais e IDH
 atlas <- read_excel("f1_data-raw/atlas.xlsx")
@@ -17,21 +19,23 @@ atlas <- atlas[1:(nrow(atlas) - 3), ] %>%
     IDHM_2010
   )
 
-cod_municipios <- read.csv("f1_data-raw/municípios_rras_sp.csv") %>% 
+cod_municipios <- read.csv("f1_data-raw/RRAS-MUNICIPIO.xlsx - IBGE.csv") %>% 
   mutate(
-    MUNICIPIO = toupper(Municipio),
-    CODMUNRES = Codigo.Municipio,
-    RRAS = Macrorregiao.de.Saude
+    MUNICIPIO = rm_accent(toupper(MUNICIPIO)),
+    CODMUNRES = CÓD..IBGE,
+    RRAS = str_trim(RRAS),
+    LABEL_RRAS = DRS
   ) %>% 
   select(
     MUNICIPIO,
     CODMUNRES, 
-    RRAS) %>%
+    RRAS,
+    LABEL_RRAS) %>%
   left_join(atlas, by = "MUNICIPIO")
 
 ### SINASC
 dados_raw <- read.csv("f1_data-raw/dados_SINASC.csv")
-  
+dados_raw <- dados_raw[-1]
 
 # Verificando porcentagem de NA's
 na_summary <- dados_raw %>%
@@ -246,18 +250,15 @@ dados_aux <- dados_raw %>%
       is.na(SEMAGESTAC) ~ NA,
       TRUE ~ 0)
     
-  ) %>% 
-  
+  )  %>%
   left_join(
     cod_municipios %>%
-      select(CODMUNRES, RRAS, IDHM_2010), by = "CODMUNRES"
-  ) %>% 
+      select(CODMUNRES, RRAS, LABEL_RRAS, IDHM_2010), by = "CODMUNRES"
+  )  %>%
   mutate(RRAS = factor(RRAS, 
-                       levels = c("RRAS1", "RRAS2", "RRAS3", "RRAS4", "RRAS5", 
-                                  "RRAS6", "RRAS7", "RRAS8", "RRAS9", "RRAS10",
-                                  "RRAS11", "RRAS12", "RRAS13", "RRAS14", "RRAS15",
-                                  "RRAS16", "RRAS17", "RRAS18", "RRAS19"),
+                       levels = mixedsort(unique(RRAS)), 
                        ordered = TRUE))
+  
 
 criar_aba_unica_por_ano <- function(ano) {
   
@@ -1083,8 +1084,8 @@ criar_aba_unica_por_ano_rras <- function(ano, rras) {
 }
 
 # Definir anos e aplicar a função
-anos <- 2012:2023
-rras <- paste0("RRAS", 1:19)
+anos <- 2012:2024
+rras <- mixedsort(unique(dados_aux$RRAS))
 parametros <- expand.grid(ano = anos, rras = rras)
 
 lista_abas_completas_ano <- lapply(anos, criar_aba_unica_por_ano)

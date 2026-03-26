@@ -3,17 +3,31 @@ library(tidyr)
 library(data.table)
 library(writexl)
 
-# código municipais 
-cod_municipios <- read.csv("f1_data-raw/municípios_rras_sp.csv") %>% 
+# códigos municipais e IDH
+atlas <- read_excel("f1_data-raw/atlas.xlsx")
+atlas <- atlas[1:(nrow(atlas) - 3), ] %>% 
   mutate(
-    MUNICIPIO = Municipio,
-    CODMUNRES = Codigo.Municipio,
-    RRAS = Macrorregiao.de.Saude
+    MUNICIPIO = Territorialidades,
+    MUNICIPIO = rm_accent(toupper(MUNICIPIO)),
+    IDHM_2010 = `IDHM 2010`) %>% 
+  select(
+    MUNICIPIO,
+    IDHM_2010
+  )
+
+cod_municipios <- read.csv("f1_data-raw/RRAS-MUNICIPIO.xlsx - IBGE.csv") %>% 
+  mutate(
+    MUNICIPIO = rm_accent(toupper(MUNICIPIO)),
+    CODMUNRES = CÓD..IBGE,
+    RRAS = str_trim(RRAS),
+    LABEL_RRAS = DRS
   ) %>% 
   select(
     MUNICIPIO,
     CODMUNRES, 
-    RRAS)
+    RRAS,
+    LABEL_RRAS) %>%
+  left_join(atlas, by = "MUNICIPIO")
 
 ### SIM-DO
 dados_raw <- fread("f1_data-raw/dados_SIM.csv")
@@ -88,13 +102,14 @@ dados_aux <- dados_raw %>%
     ),
     ESCMAE2010 = factor(ESCMAE2010, levels = c("Sem escolaridade", "Fundamental I", "Fundamental II", 
                                                "Médio", "Superior incompleto", "Superior completo", "Ignorado", "NA"))
-  ) %>% 
-    
-    left_join(
-      cod_municipios %>%
-        select(CODMUNRES, RRAS), by = "CODMUNRES"
-    )
-
+  )  %>%
+  left_join(
+    cod_municipios %>%
+      select(CODMUNRES, RRAS, LABEL_RRAS, IDHM_2010), by = "CODMUNRES"
+  )  %>%
+  mutate(RRAS = factor(RRAS, 
+                       levels = mixedsort(unique(RRAS)), 
+                       ordered = TRUE))
 # Fazendo as contagens e criando tabela por nível das variáveis e ano
 
 dados_tabela_ano <- dados_aux %>%
