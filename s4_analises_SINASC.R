@@ -17,9 +17,10 @@ dados_idh    <- read_excel("f2_tabelas/tabela_idh_médio_por_rras.xlsx")
 dados_carac <- read_excel("f2_tabelas/tabela_prematuridade_por_ano_e_rras.xlsx")
 dados_carac_obito <- read_excel("f2_tabelas/tabela_obitos_por_variavel_ano_e_rras.xlsx")
 
+# RODAR ESTA ETAPA APENAS QUANDO NOVOS DADOS FOREM ADICIONADOS AOS ARQUIVOS "dados_SINASC" e "dados_SIM" ####
 
-# Criando novas tabelas excel ####
-# limpando dados_carac
+# # Criando novas tabelas excel 
+# # limpando dados_carac (fazer apenas quando necessário para trabalhar com dados de características)
 # dados_carac <- dados_carac %>%
 #   filter(!is.na(Categoria),
 #          Categoria != "NA",
@@ -47,7 +48,7 @@ dados_resumo_ano_rras <- dados_resumo_ano_rras %>%
 write_xlsx(dados_resumo_ano_rras, "f2_tabelas/tabela_resumo_prematuridade_por_ano_e_rras.xlsx")
 
 # taxas de prematuridade
-dados_resumo_ano <- dados_resumo_ano_rras %>%
+dados_resumo_ano <- dados_resumo_ano %>%
   mutate(
     taxa_PP = `Total de partos prematuros (PP)` / `Total de nascidos vivos (NV) por residência` * 100,
     taxa_PPel_por_NV = `Total de PP eletivos (PPel)` / `Total de nascidos vivos (NV) por residência` * 100,
