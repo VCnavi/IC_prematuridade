@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 
 # Métodos
 
-Para a realização deste estudo, foram utilizados dados provenientes das bases oficiais do Sistema de Informação sobre Nascidos Vivos (SINASC), com foco nos dados de parturientes residentes no Estado de São Paulo, nos anos de 2012 a 2024. Realizando associações com dados fornecidos pelo Departamento de Gestão Interfederativa e Participativa (DGIP) da Secretaria Executiva (SE) do Ministério da Saúde (MS), e disponibilizados pelo Departamento de Monitoramento, Avaliação e Disseminação de Informações Estratégicas em Saúde (DEMAS) da Secretaria de Informação e Saúde Digital (SEIDIGI) [@infoms], também foi possível separar os registros em suas respectivas Redes Regionais de Atenção à Saúde (RRAS). A partir disso, realizou-se uma limpeza nos dados para identificar os casos em que a idade gestacional era maior ou igual a 22 semanas ou, nos casos em que não havia informação sobre a idade gestacional, identificar os casos em que o peso do recém-nascido era maior que 500 gramas. Dessa maneira, obteve-se os dados gerais dos nascidos vivos do Estado de São Paulo nos anos de 2012
+Para a realização deste estudo, foram utilizados dados provenientes das bases oficiais do Sistema de Informação sobre Nascidos Vivos (SINASC), com foco nos dados de parturientes residentes no Estado de São Paulo, nos anos de 2012 a 2024. Realizando associações com dados fornecidos pelo Departamento de Gestão Interfederativa e Participativa (DGIP) da Secretaria Executiva (SE) do Ministério da Saúde (MS), e disponibilizados pelo Departamento de Monitoramento, Avaliação e Disseminação de Informações Estratégicas em Saúde (DEMAS) da Secretaria de Informação e Saúde Digital (SEIDIGI) [@infoms], também foi possível separar os registros em suas respectivas Redes Regionais de Atenção à Saúde (RRAS). A partir disso, realizou-se uma limpeza nos dados para identificar os casos em que a idade gestacional era maior ou igual a 22 semanas ou, nos casos em que não havia informação sobre a idade gestacional, identificar os casos em que o peso do recém-nascido era maior que 500 gramas. Dessa maneira, obteve-se os dados gerais dos nascidos vivos do Estado de São Paulo nos anos de 2012.
 
 Para identificar os partos prematuros, aplicou-se um filtro de idade gestacional aos dados de nascidos vivos. Foram classificados como parto prematuro (PP) todos os nascimentos com idade gestacional entre 22 e 36 semanas. Na etapa seguinte, para distinguir entre partos prematuros espontâneos (PPes) e eletivos (PPel), foram utilizadas as variáveis STTRABPART, que indica a ocorrência de trabalho de parto induzido, e STCESPARTO, que informa se foi realizada cesárea antes do início do trabalho de parto.
 
@@ -70,9 +70,9 @@ Dentre os resultados fornecidos por este teste, destacam-se as seguintes medidas
 
 -   A significância, que representa o limiar para o qual a hipótese de que não há tendência é aceita. A tendência é estatisticamente significativa quando o valor-p é menor que 0.05.
 
-Para a realização das análises no R, foram utilizadas as funções `mk.test()`, referente ao teste de Mann-Kendall, e `sens.slope()`, para estimativa da inclinação de Sen, ambas pertencentes ao pacote `trend` [@trend].
+Para a realização das análises no R, foram utilizadas as funções `mk.test()`, referente ao teste de Mann-Kendall, e `sens.slope()`, para estimativa da inclinação de seno (Sen), ambas pertencentes ao pacote `trend` [@trend].
 
-Os resultados são apresentados no relatório sob a forma de valores de P relacionados ao teste de Mann-Kendall, indicação de significância estatística, onde consideramos p \< 0.05 significativo e p \< 0.01 altamente significativo, e direção da tendência dada pela inclinação de Sen.
+Os resultados são apresentados no relatório sob a forma de valores de P (p-valor) relacionados ao teste de Mann-Kendall, que é uma indicação de significância estatística, onde consideramos p \< 0.05 como significativo e p \< 0.01 como altamente significativo, além da direção da tendência dada pela inclinação de Sen.
 
 # Estado de São Paulo
 
@@ -191,7 +191,7 @@ tabela_tendencias_rras2 |>
   kable()
 ```
 
-Ao analisar a série histórica completa (2012-2024), observou-se uma tendência de crescimento visual mais clara nas taxas de partos prematuros espontâneos, enquanto os demais gráficos, apesar de demonstrarem crescimento a partir de determinado ponto, apresentaram também uma queda visualmente relevante entre os anos de 2012 e 2015. Por conta disso, o teste de Mann-Kendall indicou que apenas a tendência de crescimento dos partos prematuros espontâneos foi estatisticamente significativa (p \< 0.05). Isso sugere que, embora haja flutuações nas outras taxas, o aumento da prematuridade espontânea é o único estatísticamente consistente na série completa.
+Ao analisar a série histórica completa (2012-2024), observou-se uma tendência de crescimento constante mais clara nas taxas de partos prematuros espontâneos, enquanto os demais gráficos, apesar de demonstrarem crescimento a partir de determinado ponto, apresentaram também uma queda visualmente relevante entre os anos de 2012 e 2015. Por conta disso, o teste de Mann-Kendall indicou que apenas a tendência de crescimento dos partos prematuros espontâneos foi estatisticamente significativa (p \< 0.05). Isso sugere que, embora haja flutuações nas outras taxas, o aumento da prematuridade espontânea é o único estatísticamente consistente na série completa.
 
 Por ter-se observado que os demais gráficos apresentavam uma aparente consistência a partir do ano de 2015, foi realizado um recorte da série histórica para esses dados, com o intuito de testar as hipóteses de que, dentro desse recorte, os dados apresentavam um aumento consistente em suas variações.
 
@@ -774,7 +774,7 @@ tabela_tendencias_rras1 |>
 
 A análise das taxas de partos prematuros espontâneos em relação aos nascidos vivos revelou um cenário predominante de crescimento entre as RRAS que apresentaram variação estatisticamente significativa.
 
-Destaca-se a RRAS 17, que apresentou uma tendência de crescimento altamente significativa (p \< 0.001), sendo a mais acentuada neste indicador. A RRAS 16 foi a única região a registrar uma tendência altamente significativa de queda (p \< 0.05), divergindo claramente do padrão de crescimento observado nas outras localidades. As demais RRAS (1, 8, 10 e 15) mostraram um crescimento significativo, consolidando a tendência geral de aumento dos partos prematuros espontâneos no estado.
+Destaca-se a RRAS 17, que apresentou uma tendência de crescimento altamente significativa (p \< 0.001), sendo a mais acentuada neste indicador. A RRAS 16 foi a única região a registrar uma tendência altamente significativa de queda (p \< 0.05), divergindo claramente do padrão de crescimento observado nas outras localidades. As demais RRAS (1, 7 e 15) mostraram um crescimento significativo, consolidando a tendência geral de aumento dos partos prematuros espontâneos no estado.
 
 ## Recorte de 2015 à 2024 para nascidos vivos
 
@@ -871,7 +871,7 @@ tabela_tendencias_rras1_recorte |>
 
 Ao realizar a análise no recorte de 2015 à 2024, percebe-se um aparente agravante nas condições de prematuridade de São Paulo, onde, comparando com os resultados analisados no período completo (de 2012 a 2024), houve uma diferença na quantidade de regiões de saúde com tendências de prematuridade crescente significativas, aumentando de cinco para quatorze regiões.
 
-Entre as regiões de saúde, a RRAS 17 continua apresentando o caso de agravamento de partos prematuros mais significativo, validando a tendência de alta mais robusta vista anteriormente. Além disso, das quatorze RRAS, nove delas apresentaram tendências altamente significativas, reforçando ainda mais a ideia de um agravante nas condições de prematuridade de São Paulo.
+Entre as regiões de saúde, a RRAS 17 continua apresentando o caso tendência de crescimento de partos prematuros mais significativo, validando a tendência de alta mais robusta vista anteriormente. Além disso, das quatorze RRAS, nove delas apresentaram tendências altamente significativas, reforçando ainda mais a ideia de um agravante nas condições de prematuridade de São Paulo.
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppel-nv-2015-2024
@@ -921,9 +921,11 @@ tabela_tendencias_rras1_recorte |>
   kable()
 ```
 
-Os dados do período de 2015 a 2024 validam a tendência geral de crescimento dos partos prematuros eletivos, corroborando o destaque dado à RRAS 16, agora acompanhado das RRAS 4 e 5 entre as com p-valores mais significativos (0.00068, 0.00068 e 0.00017, respectivamente). Visualmente, percebe-se que a RRAS 5 por uma curva acentuada, especialmente entre 2021 e 2022. A RRAS 09 também mantém sua tendência dentro desse período ao comparar os resultados obtidos anteriormente.
+Os dados do período de 2015 a 2024 validam a tendência geral de crescimento dos partos prematuros eletivos, corroborando o destaque dado à RRAS 16, agora acompanhada das RRAS 4 e 5 entre as com p-valores mais significativos (p \< 0.001). Visualmente, percebe-se que a RRAS 16 apresenta uma curva crescente constante, com uma acentuação entre os anos de 2021 e 2022, que causou um aumento de mais de 1% na porcentagem de partos prematuros eletivos dentre os nascidos vivos.
 
-Contudo, há divergências importantes na identificação das regiões críticas. No período completo, a RRAS 5 foi omitida, enquanto aqui ela é apresentada com o mesmo nível de significância da RRAS 16 (p=0.00058) e uma curva consistentemente elevada. Além disso, as RRAS 10, 11 e 19 são vistas com tendências significativas previamente, porém não aparecem nos resultados significativos deste recorte temporal, enquanto aqui são incluídas as RRAS 4, 13 e 15.
+Contudo, há divergências importantes na identificação das regiões críticas. No período completo, a RRAS 5 apresentava uma tendência significativa, enquanto aqui ela é apresentada com uma tendência altamente significativa, demonstrando um nível de significância ainda menor que o da RRAS 16 (p=0.00017) e uma curva consistentemente elevada durante toda a série. Além disso, as RRAS 10 e 11 são vistas com tendências significativas previamente, porém não aparecem nos resultados significativos deste recorte temporal, enquanto aqui são incluídas as RRAS 4, 6, 7, 8 e 15.
+
+Das dez regiões de saúde identificadas com níveis de significância, sete delas apresentaram tendências altamente significativas, corroborando as ideias trazidas pelos gráficos e testes anteriores.
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppes-nv-2015-2024
@@ -971,9 +973,7 @@ tabela_tendencias_rras1_recorte |>
   kable()
 ```
 
-A análise comparativa revela mais diferenças entre os resultados do período completo e do recorte de 2015 a 2024. Embora a tendência de crescimento da RRAS 17 seja confirmada, o valor-p observado no recorte (0.01649) diverge do visto anteriormente (0.00127), classificando-a como "Significativa" e não "Altamente Significativa", perdendo parte de sua significância. Adicionalmente, na análise prévia foi observada a tendência de crescimento nas RRAS 01, 08, 10 e 15, que não figuram nos resultados apresentados no período de 2015 a 2024, enquanto a RRAS 18, que não apareceu antes, agora indica tendência de alta significativa, apesar de próxima do limite (p = 0.05).
-
-Outra divergência se encontra na identificação da região com redução de casos. Foi analisado que a RRAS 16 era a única com tendência de queda para os casos de prematuridade espontânea entre os nascidos vivos, porém, os dados mostram exclusivamente a RRAS 03 com direção "Decrescente" e estatisticamente significativa (p = 0.02857), o que contradiz o que foi observado para o período completo.
+A análise comparativa revela mais diferenças entre os resultados do período completo e do recorte de 2015 a 2024. Embora a tendência de crescimento das RRAS 1 e 17 sejam confirmadas, o valor-p observado no recorte (0.0491 e 0.00729) divergem dos vistos anteriormente (0.01237 e 0.00051), indicando uma significância menor para a RRAS 1 e maior para a RRAS 17. Adicionalmente, na análise prévia foi observada a tendência de crescimento nas RRAS 7, 15 e 16, que não figuram nos resultados apresentados no período de 2015 a 2024, enquanto a RRAS 18, que não apareceu antes, agora indica tendência de alta significativa.
 
 ## Partos prematuros
 
@@ -1024,11 +1024,11 @@ tabela_tendencias_rras2 |>
   kable()
 ```
 
-A análise da participação relativa dos partos prematuros eletivos dentro do total de partos prematuros revelou um cenário divergente e polarizado entre as Regiões de Saúde (RRAS). Enquanto um grupo de regiões apresentou uma nítida tendência de crescimento na proporção de partos eletivos, outro grupo demonstrou um movimento igualmente significativo de redução.
+A análise da participação relativa dos partos prematuros eletivos dentre o total de partos prematuros revelou um cenário divergente e polarizado entre as Regiões de Saúde (RRAS). Enquanto um grupo de regiões apresentou uma nítida tendência de crescimento na proporção de partos eletivos, outro grupo demonstrou um movimento igualmente significativo de redução.
 
-As RRAS 09, 10, 11, 13 e 16 exibiram curvas ascendentes, indicando que a intervenção médica eletiva tem representado uma fatia cada vez maior dos partos prematuros nessas localidades. A RRAS 16 se destacou com a tendência de alta mais acentuada e altamente significativa de todo o conjunto (p \< 0.001).
+As RRAS 9, 10, 11, 13 e 16 exibiram curvas ascendentes, indicando que a intervenção médica eletiva tem representado uma fatia cada vez maior dos partos prematuros nessas localidades. A RRAS 16 se destacou com a tendência de alta mais acentuada e altamente significativa de todo o conjunto (p \< 0.0001).
 
-Em contrapartida, as RRAS 01 e 08 registraram tendências altamente significativas de queda (p \< 0.01) neste indicador. Isso demonstra que, nessas regiões, os partos prematuros eletivos vêm perdendo participação relativa dentro do universo da prematuridade, divergindo dos padrões de crescimento observados em outras partes do estado.
+Em contrapartida, as RRAS 1, 2, 3 e 8 registraram tendências significativas de queda (p \< 0.01) neste indicador. Isso demonstra que, nessas regiões, os partos prematuros eletivos vêm perdendo participação relativa dentro do universo da prematuridade, divergindo dos padrões de crescimento observados em outras partes do estado.
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppes-pp
@@ -1078,11 +1078,11 @@ tabela_tendencias_rras2 |>
 
 ```
 
-A análise da participação relativa dos partos prematuros espontâneos dentro do total de partos prematuros revelou tendências opostas entre as Regiões de Saúde que apresentaram variação estatisticamente significativa.
+A análise da participação relativa dos partos prematuros espontâneos dentro do total de partos prematuros também revelou tendências opostas entre as Regiões de Saúde que apresentaram variação estatisticamente significativa.
 
-A RRAS 1 foi a única a registrar uma tendência significativa de crescimento (p = 0.04674) neste indicador, indicando que a prematuridade espontânea tem representado uma parcela cada vez maior dos partos prematuros nesta região.
+A RRAS 1 foi a única a registrar uma tendência significativa de crescimento neste indicador, indicando que a prematuridade espontânea tem representado uma parcela cada vez maior dos partos prematuros nesta região.
 
-Em contrapartida, as RRAS 16 e 19 exibiram tendências decrescentes. A RRAS 16 se destacou com uma queda altamente significativa (p = 0.00127). A RRAS 19 também seguiu essa trajetória de redução, porém em um patamar significativo (p = 0.04674).
+Em contrapartida, a RRAS 16 exibiu tendência decrescente, se destacando com uma queda altamente significativa (p \< 0.01).
 
 ## Recorte de 2015 à 2024 para partos prematuros
 
@@ -1158,9 +1158,9 @@ tabela_tendencias_rras2_recorte |>
   kable()
 ```
 
-A análise comparativa entre o período completo e o recorte de 2015 a 2024 valida a observação de que RRAS 16 pode ser vista como o principal destaque de aumento na proporção de partos prematuros eletivos, onde sua tendência se mantém como "Altamente Significativa" ((p = 0.00058). Da mesma forma, a tendência de queda da RRAS 1 se mantém "Altamente Significativa" (p = 0.00915), alinhada à redução mencionada na análise anterior.
+A análise comparativa entre o período completo e o recorte de 2015 a 2024 valida a observação de que RRAS 16 pode ser vista como o principal destaque de aumento na proporção de partos prematuros eletivos, onde sua tendência se mantém como altamente significativa (p = 0.00128). Da mesma forma, a tendência de queda da RRAS 1 se mantém significativa (p = 0.00915), alinhada à redução mencionada na análise anterior.
 
-Entretanto, a principal diferença entre esses períodos é a composição das RRAS com tendências significativas. Enquanto anteriormente foi averiguado crescimento nas RRAS 9, 10 e 11 e queda na RRAS 8, estas regiões deixaram de apresentar significância estatística na janela 2015-2024, desaparecendo dos resultados. Em contrapartida, os dados revelam as tendências das RRAS 4 e RRAS 5, sendo elas de crescimento estatisticamente relevantes (com a RRAS 04 sendo altamente significativa, p = 0.00915).
+Entretanto, a principal diferença entre esses períodos é a composição das RRAS com tendências significativas. Enquanto anteriormente foi averiguado crescimento nas RRAS 9, 10 e 11 e queda nas RRAS 2, 3 e 8, estas regiões deixaram de apresentar significância estatística na janela 2015-2024, desaparecendo dos resultados. Em contrapartida, os dados revelam as tendências das RRAS 4 e RRAS 5, sendo elas de crescimento estatisticamente relevantes, com a RRAS 04 apresentando tendência altamente significativa.
 
 ```{r}
 #| label: graficos-tendencias-rras-sig-ppes-pp-2015-2024
@@ -1210,6 +1210,4 @@ tabela_tendencias_rras2_recorte |>
 
 ```
 
-Ao contrastar a análise completa com o recorte de 2015 a 2024, observa-se uma mudança drástica, onde apenas a RRAS 16 manteve uma tendência significativa de queda, porém com uma significância estatística menor (p = 0.02857), enquanto as RRAS 1 e 19 não apresentaram tendência significativa nesse recorte, não constando na tabela atual. Para o caso da RRAS 19, há uma curva de crescimento brusca da taxa de partos prematuros espontâneos entre 2017 e 2019, o que pode ter feito com que o teste de Mann-Kendall não tenha observado a direção decrescente que a RRAS apresentava anteriormente. Enquanto isso, para o caso da RRAS 1, a série parece se manter mais estável nesse período, perdendo uma leve curva crescente vista entre 2012 e 2015.
-
-Além disso, o recorte de 2015 a 2024 indica que as RRAS 02, 03 e 05 surgem com tendências de queda significativas, com destaque para a RRAS 02, que agora apresenta a redução mais robusta da taxa de partos prematuros espontâneos dentre os partos prematuros (p = 0.00915), algo não observado na análise de longo prazo. Percebe-se também quedas aparentemente relevantes no período de 2020 a 2021 nas RRAS 3, 5 e 16.
+Ao contrastar a análise completa com o recorte de 2015 a 2024, observa-se uma mudança drástica, onde nenhuma das duas regiões antes observadas (RRAS 1 e 16) se encontram com tendências significativas nesse período, sendo apresentadas apenas as RRAS 2 e 5. Além disso, percebe-se também que ambas possuem tendências de queda significativa.
