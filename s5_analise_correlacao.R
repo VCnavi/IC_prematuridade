@@ -48,7 +48,7 @@ dados_rras_num <- dados_rras |>
     cob_pop_AB = 'CObertura populacional de atenção básica 2024',
     cob_pop_SF = 'Cobertura populacional com equipes de Saúde da Família 2020',
     porc_mais_7_pre_natal = '% de Mulheres com mais de 7 consultas de pré natal 2024',
-    porc_pre_natal_precose = '% de mulheres com inicio do pré-natal precoce (<12 semanas) 2024',
+    porc_pre_natal_precoce = '% de mulheres com inicio do pré-natal precoce (<12 semanas) 2024',
     porc_pre_natal_adequado = '% de mulheres con número adequado de consultas de pré-natal para a idade gestacional no parto',
     tx_mort_fetal = 'taxa de mortalidade fetal 2024 (por  1000 NV)',
     porc_obitos_fetais_evitaveis = 'Porcentagem de óbitos fetais potencialmente evitáveis'
