@@ -19,6 +19,14 @@ execute:
 knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 ```
 
+```{r}
+# pacotes
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+library(readxl)
+```
+
 # Métodos
 
 Para a realização deste estudo, foram utilizados dados provenientes das bases oficiais do Sistema de Informação sobre Nascidos Vivos (SINASC), com foco nos dados de parturientes residentes no Estado de São Paulo, no ano de 2024. Realizando associações com dados fornecidos pelo Departamento de Gestão Interfederativa e Participativa (DGIP) da Secretaria Executiva (SE) do Ministério da Saúde (MS), e disponibilizados pelo Departamento de Monitoramento, Avaliação e Disseminação de Informações Estratégicas em Saúde (DEMAS) da Secretaria de Informação e Saúde Digital (SEIDIGI) [@infoms], também foi possível separar os registros em suas respectivas Redes Regionais de Atenção à Saúde (RRAS). A partir disso, realizou-se uma limpeza nos dados para identificar os casos em que a idade gestacional era maior ou igual a 22 semanas ou, nos casos em que não havia informação sobre a idade gestacional, identificar os casos em que o peso do recém-nascido era maior que 500 gramas. Dessa maneira, obteve-se os dados gerais dos nascidos vivos do Estado de São Paulo nos anos de 2012.
@@ -46,7 +54,7 @@ tab <- "
 cat(tab)
 ```
 
-As porcentagens utilizadas ao longo do relatório foram calculadas diretamente a partir dos valores absolutos obtidos nas filtragens anteriores. A porcentagem de partos prematuros em relação ao total de nascidos vivos foi obtida dividindo-se o número total de partos prematuros pelo total de nascidos vivos e multiplicando o resultado por 100. De maneira semelhante, esse processo foi aplicado para calcular as porcentagens de partos prematuros eletivos e partos prematuros espontâneos em relação ao total de nascidos vivos e ao total de partos prematuros, criando diferentes taxas para a análise. Empregando esse procedimento para todos esses casos, foi possível adicionar ao banco de dados informações relativas aos anos no Estado de São Paulo como um todo e também informações relativas aos anos e às RRAS separadamente. 
+As porcentagens utilizadas ao longo do relatório foram calculadas diretamente a partir dos valores absolutos obtidos nas filtragens anteriores. A porcentagem de partos prematuros em relação ao total de nascidos vivos foi obtida dividindo-se o número total de partos prematuros pelo total de nascidos vivos e multiplicando o resultado por 100. De maneira semelhante, esse processo foi aplicado para calcular as porcentagens de partos prematuros eletivos e partos prematuros espontâneos em relação ao total de nascidos vivos e ao total de partos prematuros, criando diferentes taxas para a análise. Empregando esse procedimento para todos esses casos, foi possível adicionar ao banco de dados informações relativas aos anos no Estado de São Paulo como um todo e também informações relativas aos anos e às RRAS separadamente.
 
 A análise das associações entre as variáveis foi realizada por meio do coeficiente de correlação de Spearman. A escolha desse método se justifica por se tratar de uma medida não paramétrica, adequada para avaliar relações monotônicas entre variáveis, sem a necessidade de assumir normalidade na distribuição dos dados.
 
@@ -54,11 +62,31 @@ Foram calculadas as correlações entre os indicadores de prematuridade e variá
 
 Para fins interpretativos, consideraram-se estatisticamente significativas as correlações com p-valor inferior a 0,05.
 
+## Correlação de Spearman
+
+O coeficiente de correlação de Spearman ($\rho$) avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos [@Spearman_1904].
+
+O teste avalia as seguintes hipóteses estatísticas:
+
+-   Hipótese nula ($H_0$): Não há associação monotônica entre as duas variáveis (as variáveis são independentes).
+
+-   Hipótese alternativa ($H_1$): Existe uma associação monotônica entre as variáveis (os postos de uma variável tendem a aumentar ou diminuir sistematicamente em relação aos postos da outra).
+
+Dentre os resultados fornecidos por esta análise, destacam-se as seguintes medidas:
+
+-   O Coeficiente: Esta medida de associação varia entre -1 e 1. Um valor de 1 indica uma correlação monotônica positiva perfeita, -1 indica uma correlação monotônica negativa perfeita, e 0 indica a ausência de associação monotônica.
+
+-   Significância (p-valor): Representa a probabilidade de observar uma correlação tão forte quanto a calculada caso a hipótese nula fosse verdadeira. Assim como em outros testes de associação, considera-se o resultado estatisticamente significativo quando o p-valor é menor que 0.05.
+
+Para a realização das análises no ambiente R, utiliza-se a função nativa `cor.test()`, especificando o argumento `method = "spearman"`. Esta função calcula tanto o coeficiente de correlação quanto a significância estatística necessária para a interpretação dos dados.
+
+Os resultados são apresentados no relatório destacando o coeficiente de correlação (ρ), que indica a magnitude da associação, e o p-valor correspondente, onde p < 0.05 é considerado significativo e p < 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.
+
 ## Variáveis utilizadas
 
 Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. Entre os indicadores de prematuridade, consideraram-se a taxa de partos prematuros, a taxa de partos prematuros eletivos e a taxa de partos prematuros espontâneos. No que se refere aos indicadores de saúde materna e fetal, foram analisadas a razão de mortalidade materna, a taxa de mortalidade fetal e a porcentagem de óbitos fetais potencialmente evitáveis. Como indicador socioeconômico, utilizou-se o Índice de Desenvolvimento Humano (IDH). Além disso, foram incluídos indicadores de acesso e qualidade da atenção à saúde, como a cobertura populacional da atenção básica, a cobertura da Estratégia Saúde da Família, a porcentagem de mulheres com mais de sete consultas de pré-natal, o início precoce do pré-natal (antes de 12 semanas), a adequação do pré-natal e a porcentagem de usuárias exclusivas do Sistema Único de Saúde. Todas essas variáveis foram analisadas no nível das Redes Regionais de Atenção à Saúde (RRAS) para o ano de 2024.
 
-## Análise de correlação
+# Análise de correlação
 
 Apresentam-se a seguir os gráficos de correlação e sua respectiva interpretação, com ênfase nos indicadores relacionados à prematuridade.
 
@@ -68,14 +96,64 @@ Observa-se inicialmente na Figura 1 uma forte correlação positiva entre a taxa
 
 A taxa de partos prematuros espontâneos apresentou correlações positivas moderadas a fortes com indicadores de cobertura e acesso à atenção primária, como a cobertura da Estratégia Saúde da Família ($\rho$ = 0,60), cobertura da atenção básica ($\rho$ = 0,48) e proporção de mulheres com mais de sete consultas de pré-natal ($\rho$ = 0,60). Por outro lado, a taxa de prematuridade espontânea apresentou correlação negativa com a taxa de mortalidade fetal ($\rho$ = -0,35).
 
-Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p < 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente.
+Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p \< 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente.
 
 De forma semelhante, a taxa de partos prematuros eletivos apresentou correlação significativa apenas com a prematuridade total, não sendo observadas associações estatisticamente significativas com os demais indicadores analisados.
 
 Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044).
 
-
 ![Painel de dispersão e correlação entre variáveis](f3_graficos/pairs_panels.jpg){#fig-pairs}
 
-A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados.
+<!-- A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados. -->
+
+
+```{r}
+#| label: tabela-valor-p-2024
+#| tbl-cap: "Valores p significativos das correlações de Spearman entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
+# 1. Carregar as matrizes de coeficientes e p-valores
+matriz_coef <- read_excel("f2_tabelas/matriz_correlacao.xlsx")
+matriz_p <- read_excel("f2_tabelas/matriz_p_valor_correlacao.xlsx")
+
+# 2. Transformar a matriz de coeficientes para formato longo
+coef_longo <- matriz_coef %>%
+  rename(Variavel1 = 1) %>%
+  pivot_longer(cols = -Variavel1, names_to = "Variavel2", values_to = "rho")
+
+# 3. Transformar a matriz de p-valores, unir com os coeficientes e filtrar
+tabela_p <- matriz_p %>%
+  rename(Variavel1 = 1) %>%
+  pivot_longer(cols = -Variavel1, names_to = "Variavel2", values_to = "p_valor") %>%
+  
+  # Cruzamento com a tabela de coeficientes rho
+  left_join(coef_longo, by = c("Variavel1", "Variavel2")) %>%
+  
+  # Aplicação dos filtros de significância e remoção de duplicados
+  filter(p_valor < 0.05, 
+         p_valor > 0, 
+         Variavel1 < Variavel2) %>%
+  
+  # Criação das colunas de exibição e classificação
+  mutate(
+    Indicadores = paste(Variavel1, "x", Variavel2),
+    Classificacao = case_when(
+      p_valor < 0.01 ~ "Altamente significativa",
+      p_valor < 0.05 ~ "Significativa"
+    )
+  ) %>%
+  
+  # Seleção, ordenação e arredondamento
+  select(Indicadores, rho, p_valor, Classificacao) %>%
+  arrange(p_valor) %>%
+  mutate(
+    rho = round(rho, 4),
+    p_valor = round(p_valor, 4)
+  )
+
+# 4. Gerar a tabela formatada com kableExtra
+tabela_p %>%
+  kable(col.names = c("Indicadores", "Coeficiente", "Valor p", "Conclusão do teste"),
+        align = "llcc") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = F)
+```
 
