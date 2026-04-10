@@ -75,6 +75,7 @@ div.csl-indent {
   <li><a href="#variáveis-utilizadas" id="toc-variáveis-utilizadas" class="nav-link" data-scroll-target="#variáveis-utilizadas">Variáveis utilizadas</a></li>
   </ul></li>
   <li><a href="#análise-de-correlação" id="toc-análise-de-correlação" class="nav-link" data-scroll-target="#análise-de-correlação">Análise de correlação</a></li>
+  <li><a href="#texto-para-os-gráficos-de-dispersão-caso-formos-manter-eles-individuais-deixei-os-gráficos-das-correlações-significativas-como-includefalse." id="toc-texto-para-os-gráficos-de-dispersão-caso-formos-manter-eles-individuais-deixei-os-gráficos-das-correlações-significativas-como-includefalse." class="nav-link" data-scroll-target="#texto-para-os-gráficos-de-dispersão-caso-formos-manter-eles-individuais-deixei-os-gráficos-das-correlações-significativas-como-includefalse.">TEXTO PARA OS GRÁFICOS DE DISPERSÃO CASO FORMOS MANTER ELES INDIVIDUAIS? DEIXEI OS GRÁFICOS DAS CORRELAÇÕES SIGNIFICATIVAS COMO INCLUDE=FALSE.</a></li>
   </ul>
 </nav>
 </div>
@@ -172,11 +173,11 @@ div.csl-indent {
 <p>Para fins interpretativos, consideraram-se estatisticamente significativas as correlações com p-valor inferior a 0,05.</p>
 <section id="correlação-de-spearman" class="level2">
 <h2 class="anchored" data-anchor-id="correlação-de-spearman">Correlação de Spearman</h2>
-<p>O coeficiente de correlação de Spearman (<span class="math inline">\(\rho\)</span>) avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos <span class="citation" data-cites="Spearman_1904">(<a href="#ref-Spearman_1904" role="doc-biblioref">Spearman 1904</a>)</span>.</p>
+<p>O coeficiente de correlação de Spearman (rho ou <span class="math inline">\(\rho\)</span>) avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos <span class="citation" data-cites="Spearman_1904">(<a href="#ref-Spearman_1904" role="doc-biblioref">Spearman 1904</a>)</span>.</p>
 <p>O teste avalia as seguintes hipóteses estatísticas:</p>
 <ul>
 <li><p>Hipótese nula (<span class="math inline">\(H_0\)</span>): Não há associação monotônica entre as duas variáveis (as variáveis são independentes).</p></li>
-<li><p>Hipótese alternativa (<span class="math inline">\(H_1\)</span>): Existe uma associação monotônica entre as variáveis (os postos de uma variável tendem a aumentar ou diminuir sistematicamente em relação aos postos da outra).</p></li>
+<li><p>Hipótese alternativa (<span class="math inline">\(H_1\)</span>): Existe uma associação monotônica entre as variáveis (os postos de uma variável tendem a aumentar ou diminuir em relação aos postos da outra).</p></li>
 </ul>
 <p>Dentre os resultados fornecidos por esta análise, destacam-se as seguintes medidas:</p>
 <ul>
@@ -184,7 +185,7 @@ div.csl-indent {
 <li><p>Significância (p-valor): Representa a probabilidade de observar uma correlação tão forte quanto a calculada caso a hipótese nula fosse verdadeira. Assim como em outros testes de associação, considera-se o resultado estatisticamente significativo quando o p-valor é menor que 0.05.</p></li>
 </ul>
 <p>Para a realização das análises no ambiente R, utiliza-se a função nativa <code>cor.test()</code>, especificando o argumento <code>method = "spearman"</code>. Esta função calcula tanto o coeficiente de correlação quanto a significância estatística necessária para a interpretação dos dados.</p>
-<p>Os resultados são apresentados no relatório destacando o coeficiente de correlação (ρ), que indica a magnitude da associação, e o p-valor correspondente, onde p &lt; 0.05 é considerado significativo e p &lt; 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.</p>
+<p>Os resultados são apresentados no relatório destacando o coeficiente de correlação, que indica a magnitude da associação, e o p-valor correspondente, onde p &lt; 0.05 é considerado significativo e p &lt; 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.</p>
 </section>
 <section id="variáveis-utilizadas" class="level2">
 <h2 class="anchored" data-anchor-id="variáveis-utilizadas">Variáveis utilizadas</h2>
@@ -205,13 +206,15 @@ div.csl-indent {
 <p>Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p &lt; 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente.</p>
 <p>De forma semelhante, a taxa de partos prematuros eletivos apresentou correlação significativa apenas com a prematuridade total, não sendo observadas associações estatisticamente significativas com os demais indicadores analisados.</p>
 <p>Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044).</p>
-<div id="fig-pairs" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/pairs_panels.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Painel de dispersão e correlação entre variáveis</figcaption>
-</figure>
-</div>
-<!-- A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados. -->
+<p>Além disso, avaliando as demais variáveis, verificou-se uma associação positiva altamente significativa (<span class="math inline">\(\rho\)</span> = 0.9293; p = 0.0000) entre a proporção de mulheres com mais de 7 consultas de pré-natal e a proporção de pré-natal adequado, indicando que maiores percentuais de realização de consultas estão relacionados a maior adequação do acompanhamento pré-natal. De forma consistente, a cobertura populacional de atenção básica apresenta associação positiva altamente significativa com a cobertura por equipes de Saúde da Família (<span class="math inline">\(\rho\)</span> = 0.7888; p = 0.0001), evidenciando que maiores níveis de uma cobertura estão relacionados a maiores níveis da outra.</p>
+<p>Por outro lado, observou-se que o IDH de 2022 apresenta associação negativa altamente significativa com a proporção de usuárias exclusivas do SUS (<span class="math inline">\(\rho\)</span> = −0.7176; p = 0.0008), indicando que valores mais elevados de IDH estão relacionados a menores proporções dessa população. Em contrapartida, a cobertura de atenção básica mostra associação positiva altamente significativa com a proporção de usuárias exclusivas do SUS (<span class="math inline">\(\rho\)</span> = 0.6105; p = 0.0071), sugerindo que maiores níveis de cobertura estão associados a maiores proporções de usuárias exclusivas do SUS.</p>
+<p>Por fim, pode-se observar que a proporção de início precoce do pré-natal apresenta associação negativa significativa com a razão de mortalidade materna (<span class="math inline">\(\rho\)</span> = −0.5480; p = 0.0186), assim como a proporção de mulheres com mais de 7 consultas de pré-natal também apresenta associação negativa significativa com a taxa de mortalidade fetal (<span class="math inline">\(\rho\)</span> = −0.5067; p = 0.0319), indicando que o pré-natal iniciado precocemente está relacionado a menores razões de morte materna e que mais de 7 consultas de pré-natal estão relacionadas a menores taxas de mortalidade fetal.</p>
+<!-- ![Painel de dispersão e correlação entre variáveis](f3_graficos/pairs_panels.jpg){#fig-pairs} -->
+<!-- <!-- A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados. -->
+<p>–&gt;</p>
+</section>
+<section id="texto-para-os-gráficos-de-dispersão-caso-formos-manter-eles-individuais-deixei-os-gráficos-das-correlações-significativas-como-includefalse." class="level1">
+<h1>TEXTO PARA OS GRÁFICOS DE DISPERSÃO CASO FORMOS MANTER ELES INDIVIDUAIS? DEIXEI OS GRÁFICOS DAS CORRELAÇÕES SIGNIFICATIVAS COMO INCLUDE=FALSE.</h1>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">

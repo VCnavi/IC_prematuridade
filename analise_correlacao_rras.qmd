@@ -15,16 +15,42 @@ execute:
   no-python: true
 ---
 
-```{r, echo=FALSE}
-knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
-```
-
-```{r}
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
 # pacotes
 library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(readxl)
+library(ggplot2)
+library(dplyr)
+library(purrr)
+library(patchwork)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# dados
+dados_rras_2024 <- read_excel("f2_tabelas/dados_rras_2024.xlsx")
+matriz_coef <- read_excel("f2_tabelas/matriz_correlacao.xlsx")
+matriz_p <- read_excel("f2_tabelas/matriz_p_valor_correlacao.xlsx")
+
+# transformações necessárias
+dados_rras_num <- dados_rras_2024 |>
+  select(-RRAS) |>
+  rename(
+    tx_PP = taxa_PP,
+    tx_PPel = taxa_PPel_por_NV,
+    tx_PPes = taxa_PPes_por_NV,
+    rz_mort_mat = 'Razão de Mortalidade materna oficial 2024',
+    IDH_2022 = 'IDH 2022',
+    porc_exclusivas_SUS = '% de mulheres de 10-49 anos usuárias exclusivas do SUS 2024',
+    cob_pop_AB = 'CObertura populacional de atenção básica 2024',
+    cob_pop_SF = 'Cobertura populacional com equipes de Saúde da Família 2020',
+    porc_mais_7_pre_natal = '% de Mulheres com mais de 7 consultas de pré natal 2024',
+    porc_pre_natal_precoce = '% de mulheres com inicio do pré-natal precoce (<12 semanas) 2024',
+    porc_pre_natal_adequado = '% de mulheres con número adequado de consultas de pré-natal para a idade gestacional no parto',
+    tx_mort_fetal = 'taxa de mortalidade fetal 2024 (por  1000 NV)',
+    porc_obitos_fetais_evitaveis = 'Porcentagem de óbitos fetais potencialmente evitáveis'
+  ) 
 ```
 
 # Métodos
@@ -64,13 +90,13 @@ Para fins interpretativos, consideraram-se estatisticamente significativas as co
 
 ## Correlação de Spearman
 
-O coeficiente de correlação de Spearman ($\rho$) avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos [@Spearman_1904].
+O coeficiente de correlação de Spearman (rho ou $\rho$) avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos [@Spearman_1904].
 
 O teste avalia as seguintes hipóteses estatísticas:
 
 -   Hipótese nula ($H_0$): Não há associação monotônica entre as duas variáveis (as variáveis são independentes).
 
--   Hipótese alternativa ($H_1$): Existe uma associação monotônica entre as variáveis (os postos de uma variável tendem a aumentar ou diminuir sistematicamente em relação aos postos da outra).
+-   Hipótese alternativa ($H_1$): Existe uma associação monotônica entre as variáveis (os postos de uma variável tendem a aumentar ou diminuir em relação aos postos da outra).
 
 Dentre os resultados fornecidos por esta análise, destacam-se as seguintes medidas:
 
@@ -80,7 +106,7 @@ Dentre os resultados fornecidos por esta análise, destacam-se as seguintes medi
 
 Para a realização das análises no ambiente R, utiliza-se a função nativa `cor.test()`, especificando o argumento `method = "spearman"`. Esta função calcula tanto o coeficiente de correlação quanto a significância estatística necessária para a interpretação dos dados.
 
-Os resultados são apresentados no relatório destacando o coeficiente de correlação (ρ), que indica a magnitude da associação, e o p-valor correspondente, onde p < 0.05 é considerado significativo e p < 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.
+Os resultados são apresentados no relatório destacando o coeficiente de correlação, que indica a magnitude da associação, e o p-valor correspondente, onde p < 0.05 é considerado significativo e p < 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.
 
 ## Variáveis utilizadas
 
@@ -102,37 +128,32 @@ De forma semelhante, a taxa de partos prematuros eletivos apresentou correlaçã
 
 Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044).
 
-![Painel de dispersão e correlação entre variáveis](f3_graficos/pairs_panels.jpg){#fig-pairs}
+Além disso, avaliando as demais variáveis, verificou-se uma associação positiva altamente significativa ($\rho$ = 0.9293; p = 0.0000) entre a proporção de mulheres com mais de 7 consultas de pré-natal e a proporção de pré-natal adequado, indicando que maiores percentuais de realização de consultas estão relacionados a maior adequação do acompanhamento pré-natal. De forma consistente, a cobertura populacional de atenção básica apresenta associação positiva altamente significativa com a cobertura por equipes de Saúde da Família ($\rho$ = 0.7888; p = 0.0001), evidenciando que maiores níveis de uma cobertura estão relacionados a maiores níveis da outra.
 
-<!-- A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados. -->
+Por outro lado, observou-se que o IDH de 2022 apresenta associação negativa altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = −0.7176; p = 0.0008), indicando que valores mais elevados de IDH estão relacionados a menores proporções dessa população. Em contrapartida, a cobertura de atenção básica mostra associação positiva altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = 0.6105; p = 0.0071), sugerindo que maiores níveis de cobertura estão associados a maiores proporções de usuárias exclusivas do SUS.
 
+Por fim, pode-se observar que a proporção de início precoce do pré-natal apresenta associação negativa significativa com a razão de mortalidade materna ($\rho$ = −0.5480; p = 0.0186), assim como a proporção de mulheres com mais de 7 consultas de pré-natal também apresenta associação negativa significativa com a taxa de mortalidade fetal ($\rho$ = −0.5067; p = 0.0319), indicando que o pré-natal iniciado precocemente está relacionado a menores razões de morte materna e que mais de 7 consultas de pré-natal estão relacionadas a menores taxas de mortalidade fetal.
 
-```{r}
-#| label: tabela-valor-p-2024
-#| tbl-cap: "Valores p significativos das correlações de Spearman entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
-# 1. Carregar as matrizes de coeficientes e p-valores
-matriz_coef <- read_excel("f2_tabelas/matriz_correlacao.xlsx")
-matriz_p <- read_excel("f2_tabelas/matriz_p_valor_correlacao.xlsx")
+<!-- ![Painel de dispersão e correlação entre variáveis](f3_graficos/pairs_panels.jpg){#fig-pairs} -->
 
-# 2. Transformar a matriz de coeficientes para formato longo
+<!-- <!-- A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados. --> -->
+
+# TEXTO PARA OS GRÁFICOS DE DISPERSÃO CASO FORMOS MANTER ELES INDIVIDUAIS? DEIXEI OS GRÁFICOS DAS CORRELAÇÕES SIGNIFICATIVAS COMO INCLUDE=FALSE.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# formato longo
 coef_longo <- matriz_coef %>%
   rename(Variavel1 = 1) %>%
   pivot_longer(cols = -Variavel1, names_to = "Variavel2", values_to = "rho")
 
-# 3. Transformar a matriz de p-valores, unir com os coeficientes e filtrar
+#transformando a tabela
 tabela_p <- matriz_p %>%
   rename(Variavel1 = 1) %>%
   pivot_longer(cols = -Variavel1, names_to = "Variavel2", values_to = "p_valor") %>%
-  
-  # Cruzamento com a tabela de coeficientes rho
   left_join(coef_longo, by = c("Variavel1", "Variavel2")) %>%
-  
-  # Aplicação dos filtros de significância e remoção de duplicados
   filter(p_valor < 0.05, 
          p_valor > 0, 
          Variavel1 < Variavel2) %>%
-  
-  # Criação das colunas de exibição e classificação
   mutate(
     Indicadores = paste(Variavel1, "x", Variavel2),
     Classificacao = case_when(
@@ -140,20 +161,43 @@ tabela_p <- matriz_p %>%
       p_valor < 0.05 ~ "Significativa"
     )
   ) %>%
-  
-  # Seleção, ordenação e arredondamento
   select(Indicadores, rho, p_valor, Classificacao) %>%
   arrange(p_valor) %>%
   mutate(
     rho = round(rho, 4),
     p_valor = round(p_valor, 4)
   )
+```
 
-# 4. Gerar a tabela formatada com kableExtra
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+plots <- pmap(list(tabela_p$Indicadores, 
+                   strsplit(tabela_p$Indicadores, " x ")), 
+              function(label, vars) {
+                
+  v1 <- vars[1]
+  v2 <- vars[2]
+  
+  ggplot(dados_rras_num, aes_string(x = v1, y = v2)) +
+    geom_point(size = 3, color = "steelblue", alpha = 0.7) +
+    geom_smooth(method = "lm", color = "firebrick", se = TRUE) + # Linha de tendência
+    labs(title = paste("Correlação:", label),
+         x = v1,
+         y = v2) +
+    theme_minimal()
+})
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+plots
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#| label: tabela-valor-p-2024
+#| tbl-cap: "Valores p significativos das correlações de Spearman entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
+# tabela final
 tabela_p %>%
   kable(col.names = c("Indicadores", "Coeficiente", "Valor p", "Conclusão do teste"),
         align = "llcc") %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
                 full_width = F)
 ```
-

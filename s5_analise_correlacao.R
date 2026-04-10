@@ -4,6 +4,7 @@ library(writexl)
 library(dplyr)
 library(corrplot)
 library(tibble)
+library(psych)
 
 ##
 
