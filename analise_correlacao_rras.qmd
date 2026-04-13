@@ -110,36 +110,13 @@ Os resultados são apresentados no relatório destacando o coeficiente de correl
 
 ## Variáveis utilizadas
 
-Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. Entre os indicadores de prematuridade, consideraram-se a taxa de partos prematuros, a taxa de partos prematuros eletivos e a taxa de partos prematuros espontâneos. No que se refere aos indicadores de saúde materna e fetal, foram analisadas a razão de mortalidade materna, a taxa de mortalidade fetal e a porcentagem de óbitos fetais potencialmente evitáveis. Como indicador socioeconômico, utilizou-se o Índice de Desenvolvimento Humano (IDH). Além disso, foram incluídos indicadores de acesso e qualidade da atenção à saúde, como a cobertura populacional da atenção básica, a cobertura da Estratégia Saúde da Família, a porcentagem de mulheres com mais de sete consultas de pré-natal, o início precoce do pré-natal (antes de 12 semanas), a adequação do pré-natal e a porcentagem de usuárias exclusivas do Sistema Único de Saúde. Todas essas variáveis foram analisadas no nível das Redes Regionais de Atenção à Saúde (RRAS) para o ano de 2024.
+Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. Entre os indicadores de prematuridade, consideraram-se a taxa de partos prematuros (tx_PP), a taxa de partos prematuros eletivos (tx_PPel) e a taxa de partos prematuros espontâneos (tx_PPes). No que se refere aos indicadores de saúde materna e fetal, foram analisadas a razão de mortalidade materna (rz_mort_mat), a taxa de mortalidade fetal (tx_mort_fetal) e a porcentagem de óbitos fetais potencialmente evitáveis (porc_obitos_fetais_evitaveis). Como indicador socioeconômico, utilizou-se o Índice de Desenvolvimento Humano (IDH_2022). Além disso, foram incluídos indicadores de acesso e qualidade da atenção à saúde, como a cobertura populacional da atenção básica (cob_pop_AB), a cobertura da Estratégia Saúde da Família (cob_pop_SF), a porcentagem de mulheres com mais de sete consultas de pré-natal (porc_mais_7_pre_natal), o início precoce do pré-natal (porc_pre_natal_precoec), a adequação do pré-natal (porc_pre_natal_adequado) e a porcentagem de usuárias exclusivas do Sistema Único de Saúde (porc_exclusivas_SUS). Todas essas variáveis foram analisadas no nível das Redes Regionais de Atenção à Saúde (RRAS) para o ano de 2024.
 
 # Análise de correlação
 
-Apresentam-se a seguir os gráficos de correlação e sua respectiva interpretação, com ênfase nos indicadores relacionados à prematuridade.
+Apresentam-se a seguir os gráficos e tabelas de correlação, assim como os gráficos de dispersão e suas respectivas interpretações, com ênfase nos indicadores relacionados à prematuridade.
 
 ![Matriz de correlação entre variáveis](f3_graficos/corrplot.jpg){#fig-corrplot}
-
-Observa-se inicialmente na Figura 1 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos ($\rho$ = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca ($\rho$ = 0,31), sugerindo menor contribuição relativa desse componente.
-
-A taxa de partos prematuros espontâneos apresentou correlações positivas moderadas a fortes com indicadores de cobertura e acesso à atenção primária, como a cobertura da Estratégia Saúde da Família ($\rho$ = 0,60), cobertura da atenção básica ($\rho$ = 0,48) e proporção de mulheres com mais de sete consultas de pré-natal ($\rho$ = 0,60). Por outro lado, a taxa de prematuridade espontânea apresentou correlação negativa com a taxa de mortalidade fetal ($\rho$ = -0,35).
-
-Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p \< 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente.
-
-De forma semelhante, a taxa de partos prematuros eletivos apresentou correlação significativa apenas com a prematuridade total, não sendo observadas associações estatisticamente significativas com os demais indicadores analisados.
-
-Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044).
-
-Além disso, avaliando as demais variáveis, verificou-se uma associação positiva altamente significativa ($\rho$ = 0.9293; p = 0.0000) entre a proporção de mulheres com mais de 7 consultas de pré-natal e a proporção de pré-natal adequado, indicando que maiores percentuais de realização de consultas estão relacionados a maior adequação do acompanhamento pré-natal. De forma consistente, a cobertura populacional de atenção básica apresenta associação positiva altamente significativa com a cobertura por equipes de Saúde da Família ($\rho$ = 0.7888; p = 0.0001), evidenciando que maiores níveis de uma cobertura estão relacionados a maiores níveis da outra.
-
-Por outro lado, observou-se que o IDH de 2022 apresenta associação negativa altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = −0.7176; p = 0.0008), indicando que valores mais elevados de IDH estão relacionados a menores proporções dessa população. Em contrapartida, a cobertura de atenção básica mostra associação positiva altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = 0.6105; p = 0.0071), sugerindo que maiores níveis de cobertura estão associados a maiores proporções de usuárias exclusivas do SUS.
-
-Por fim, pode-se observar que a proporção de início precoce do pré-natal apresenta associação negativa significativa com a razão de mortalidade materna ($\rho$ = −0.5480; p = 0.0186), assim como a proporção de mulheres com mais de 7 consultas de pré-natal também apresenta associação negativa significativa com a taxa de mortalidade fetal ($\rho$ = −0.5067; p = 0.0319), indicando que o pré-natal iniciado precocemente está relacionado a menores razões de morte materna e que mais de 7 consultas de pré-natal estão relacionadas a menores taxas de mortalidade fetal.
-
-<!-- ![Painel de dispersão e correlação entre variáveis](f3_graficos/pairs_panels.jpg){#fig-pairs} -->
-
-<!-- <!-- A Figura 2 complementa essa análise ao apresentar o painel de dispersão entre as variáveis, permitindo observar a distribuição dos dados entre as RRAS e possíveis padrões de associação entre os indicadores analisados. --> -->
-
-# TEXTO PARA OS GRÁFICOS DE DISPERSÃO CASO FORMOS MANTER ELES INDIVIDUAIS? DEIXEI OS GRÁFICOS DAS CORRELAÇÕES SIGNIFICATIVAS COMO INCLUDE=FALSE.
-
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # formato longo
 coef_longo <- matriz_coef %>%
@@ -169,7 +146,7 @@ tabela_p <- matriz_p %>%
   )
 ```
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 plots <- pmap(list(tabela_p$Indicadores, 
                    strsplit(tabela_p$Indicadores, " x ")), 
               function(label, vars) {
@@ -177,23 +154,34 @@ plots <- pmap(list(tabela_p$Indicadores,
   v1 <- vars[1]
   v2 <- vars[2]
   
-  ggplot(dados_rras_num, aes_string(x = v1, y = v2)) +
+  ggplot(cbind(dados_rras_num, RRAS = dados_rras_2024$RRAS), aes_string(x = v1, y = v2)) +
     geom_point(size = 3, color = "steelblue", alpha = 0.7) +
-    geom_smooth(method = "lm", color = "firebrick", se = TRUE) + # Linha de tendência
-    labs(title = paste("Correlação:", label),
+    geom_text(aes_string(label = "RRAS"), vjust = -0.5, size = 3.5) +
+    geom_smooth(method = "lm", color = "firebrick", se = FALSE) + 
+    labs(title = paste("Relação:", label),
          x = v1,
          y = v2) +
     theme_minimal()
 })
-```
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-plots
+# baixando os gráficos
+for (i in seq_along(plots)) {
+  caminho_arquivo <- paste0("f3_graficos/grafico_", i, ".jpg")
+
+  jpeg(filename = caminho_arquivo, 
+       width = 2000, 
+       height = 2000, 
+       res = 300)
+  
+  print(plots[[i]])
+  
+  dev.off()
+}
 ```
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 #| label: tabela-valor-p-2024
-#| tbl-cap: "Valores p significativos das correlações de Spearman entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
+#| tbl-cap: "Tabela 1: Valores p e coeficientes de Spearman significativos entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
 # tabela final
 tabela_p %>%
   kable(col.names = c("Indicadores", "Coeficiente", "Valor p", "Conclusão do teste"),
@@ -201,3 +189,68 @@ tabela_p %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
                 full_width = F)
 ```
+
+Observa-se inicialmente na Figura 1 e na Tabela 1 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos ($\rho$ = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca ($\rho$ = 0,31), sugerindo menor contribuição relativa desse componente.
+
+A taxa de partos prematuros espontâneos apresentou correlações positivas moderadas a fortes com indicadores de cobertura e acesso à atenção primária, como a cobertura da Estratégia Saúde da Família ($\rho$ = 0,60), cobertura da atenção básica ($\rho$ = 0,48) e proporção de mulheres com mais de sete consultas de pré-natal ($\rho$ = 0,60). Por outro lado, a taxa de prematuridade espontânea apresentou correlação negativa com a taxa de mortalidade fetal ($\rho$ = -0,35).
+
+Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p \< 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente.
+
+De forma semelhante, a taxa de partos prematuros eletivos apresentou correlação significativa apenas com a prematuridade total, não sendo observadas associações estatisticamente significativas com os demais indicadores analisados.
+
+Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044).
+
+Além disso, avaliando as demais variáveis, verificou-se uma associação positiva altamente significativa ($\rho$ = 0.9293; p = 0.0000) entre a proporção de mulheres com mais de 7 consultas de pré-natal e a proporção de pré-natal adequado, indicando que maiores percentuais de realização de consultas estão relacionados a maior adequação do acompanhamento pré-natal. De forma consistente, a cobertura populacional de atenção básica apresenta associação positiva altamente significativa com a cobertura por equipes de Saúde da Família ($\rho$ = 0.7888; p = 0.0001), evidenciando que maiores níveis de uma cobertura estão relacionados a maiores níveis da outra.
+
+Por outro lado, observou-se que o IDH de 2022 apresenta associação negativa altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = −0.7176; p = 0.0008), indicando que valores mais elevados de IDH estão relacionados a menores proporções dessa população. Em contrapartida, a cobertura de atenção básica mostra associação positiva altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = 0.6105; p = 0.0071), sugerindo que maiores níveis de cobertura estão associados a maiores proporções de usuárias exclusivas do SUS.
+
+Por fim, pode-se observar que a proporção de início precoce do pré-natal apresenta associação negativa significativa com a razão de mortalidade materna ($\rho$ = −0.5480; p = 0.0186), assim como a proporção de mulheres com mais de 7 consultas de pré-natal também apresenta associação negativa significativa com a taxa de mortalidade fetal ($\rho$ = −0.5067; p = 0.0319), indicando que o pré-natal iniciado precocemente está relacionado a menores razões de morte materna e que mais de 7 consultas de pré-natal estão relacionadas a menores taxas de mortalidade fetal.
+
+A seguir, tem-se os gráficos de dispersão das relações entre as variáveis com correlações significativas de acordo com a correlação de Spearman, com o intuito de complementar as análises realizadas através da correlação de Spearman.
+
+
+![Dispersão entre porc_mais_7_pre_natal e porc_pre_natal_adequado](f3_graficos/grafico_1.jpg){#fig-corr1}
+
+O gráfico de dispersão entre a porcentagem de mulheres com mais de 7 consultas de pré-natal e a porcentagem de pré-natal adequado revela uma associação positiva altamente significativa, perceptível pela reta de tendência geral acentuada, indicando que maiores percentuais de consultas estão diretamente relacionados a uma maior adequação do acompanhamento nas redes regionais. As RRAS 11, 12 e 18 apresentam os maiores índices em ambos os indicadores, situando-se no extremo superior direito da distribuição, enquanto as RRAS 2 e 5 ocupam o extremo oposto com os menores valores registrados. Nota-se que a RRAS 15 apresenta um desvio em relação à tendência geral.
+
+![Dispersão entre cob_pop_AB e cob_pop_SF](f3_graficos/grafico_2.jpg){#fig-corr2}
+
+A análise da cobertura populacional de atenção básica em relação à cobertura por equipes de Saúde da Família demonstra uma associação positiva altamente significativa. As RRAS 11, 10 e 12 destacam-se pelas maiores porcentagens de cobertura em ambas as modalidades. Em contrapartida, as RRAS 4, 5 e 16 apresentam coberturas de Saúde da Família que se posicionam bem abaixo da linha de tendência central.
+
+
+![Dispersão entre tx_PP e tx_PPel](f3_graficos/grafico_3.jpg){#fig-corr3}
+
+Na relação entre a taxa de partos prematuros e a taxa de partos prematuros eletivos, as RRAS 18 e 5 registram as taxas mais elevadas para ambos os indicadores, ao passo que as RRAS 8, 4 e 6 concentram-se nos menores valores tanto de prematuridade total quanto de prematuridade eletiva.
+
+![Dispersão entre IDH_2022 e porc_exclusivas_SUS](f3_graficos/grafico_4.jpg){#fig-corr4}
+
+Na Figura 4, observa-se que as RRAS 6 e 1 ocupam o quadrante inferior direito do gráfico, caracterizado pelo maior IDH e menor dependência exclusiva do SUS, enquanto as RRAS 10, 8 e 11 situam-se no extremo oposto, apresentando menores índices de IDH acompanhados das maiores proporções de usuárias exclusivas.
+
+![Dispersão entre cob_pop_AB e porc_exclusivas_SUS](f3_graficos/grafico_5.jpg){#fig-corr5}
+
+Na Figura 5, percebe-se que as RRAS 10, 11 e 12 encontram-se no quadrante superior direito, apresentando altos índices em ambos os indicadores simultaneamente. Em contrapartida, a RRAS 1 configura-se como um desvio à tendência geral da amostra, mantendo uma cobertura de atenção básica superior a 70%, porém registrando a menor proporção de usuárias exclusivas do SUS entre todas as redes regionais.
+
+![Dispersão entre cob_pop_SF e tx_PPes](f3_graficos/grafico_6.jpg){#fig-corr6}
+
+Na dispersão entre a cobertura populacional da Estratégia Saúde da Família e a taxa de partos prematuros espontâneos, a RRAS 11 posicionou-se no extremo superior de cobertura e taxa, enquanto as RRAS 2, 4 e 5 apresentam os menores valores para ambos os indicadores. A RRAS 15 destaca-se como um ponto atípico, apresentando a maior taxa de prematuridade espontânea do conjunto de dados, apesar de possuir uma cobertura de Saúde da Família em patamar intermediário.
+
+![Dispersão entre porc_mais_7_pre_natal e tx_PPes](f3_graficos/grafico_7.jpg){#fig-corr7}
+
+Pelo gráfico, percebe-se que as RRAS 11 e 12 posicionam-se com altos valores em ambos os indicadores, enquanto a RRAS 2 apresenta os menores índices tanto de consultas quanto de prematuridade espontânea. A RRAS 15 aparece novamente como um ponto atípico na distribuição, apresentando a maior taxa de prematuridade espontânea entre todas as regiões, apesar de possuir um percentual de consultas superior a 85%.
+
+![Dispersão entre porc_pre_natal_precoce e rz_mort_mat](f3_graficos/grafico_8.jpg){#fig-corr8}
+
+O gráfico de dispersão da relação entre porcentagens de pré-natal precoce e razão de mortalidade materna mostra que as RRAS 18, 15 e 7 concentram-se no quadrante superior esquerdo, com menores percentuais de início precoce e razões de mortalidade mais elevadas. Por outro lado, a RRAS 10 apresenta o maior percentual de início precoce do pré-natal e a menor razão de mortalidade materna do conjunto de dados, posicionando-se no extremo inferior direito da tendência observada.
+
+![Dispersão entre porc_mais_7_pre_natal e tx_mort_fetal](f3_graficos/grafico_9.jpg){#fig-corr9}
+
+No gráfico de dispersão, a RRAS 2 destaca-se no extremo superior esquerdo, registrando a maior taxa de mortalidade fetal acompanhada pelo menor percentual de realização de mais de 7 consultas. No extremo oposto, as RRAS 10, 12, 16 e 15 situam-se no quadrante inferior direito, apresentando alta cobertura de consultas e as menores taxas de mortalidade fetal observadas no período.
+
+![Dispersão entre cob_pop_AB e tx_PPes](f3_graficos/grafico_10.jpg){#fig-corr10}
+
+No gráfico da Figura 10, é visto que as RRAS 11 e 12 posicionam-se no extremo superior direito da tendência, enquanto as RRAS 2 e 5 ocupam o extremo inferior esquerdo. A RRAS 15 destaca-se como um ponto isolado no topo da distribuição, apresentando a maior taxa de prematuridade espontânea do estado para um nível intermediário de cobertura assistencial, ao passo que as RRAS 4 e 16 registram taxas de prematuridade espontânea reduzidas apesar de possuírem coberturas de atenção básica superiores a 70%.
+
+![Dispersão entre porc_pre_natal_adequado e tx_PPes](f3_graficos/grafico_11.jpg){#fig-corr11}
+
+Pelo gráfico de dispersão da relação entre a porcentagem de pré-natais adequados e a taxa de prematuridade espontânea, as RRAS 11 e 12 situam-se no quadrante superior direito, combinando altos índices de adequação de pré-natal e taxas elevadas de prematuridade espontânea, enquanto a RRAS 2 posiciona-se no extremo oposto com os menores valores para ambas as variáveis. A RRAS 15 configura-se novamente como o principal desvio da tendência central, mantendo a taxa mais elevada de prematuridade espontânea da amostra, enquanto a RRAS 16 apresenta uma das menores taxas observadas.
+
