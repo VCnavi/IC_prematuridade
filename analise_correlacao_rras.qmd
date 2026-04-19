@@ -108,9 +108,67 @@ Para a realização das análises no ambiente R, utiliza-se a função nativa `c
 
 Os resultados são apresentados no relatório destacando o coeficiente de correlação, que indica a magnitude da associação, e o p-valor correspondente, onde p < 0.05 é considerado significativo e p < 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.
 
-## Variáveis utilizadas
+## Variáveis consideradas nas análise
 
-Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. Entre os indicadores de prematuridade, consideraram-se a taxa de partos prematuros (tx_PP), a taxa de partos prematuros eletivos (tx_PPel) e a taxa de partos prematuros espontâneos (tx_PPes). No que se refere aos indicadores de saúde materna e fetal, foram analisadas a razão de mortalidade materna (rz_mort_mat), a taxa de mortalidade fetal (tx_mort_fetal) e a porcentagem de óbitos fetais potencialmente evitáveis (porc_obitos_fetais_evitaveis). Como indicador socioeconômico, utilizou-se o Índice de Desenvolvimento Humano (IDH_2022). Além disso, foram incluídos indicadores de acesso e qualidade da atenção à saúde, como a cobertura populacional da atenção básica (cob_pop_AB), a cobertura da Estratégia Saúde da Família (cob_pop_SF), a porcentagem de mulheres com mais de sete consultas de pré-natal (porc_mais_7_pre_natal), o início precoce do pré-natal (porc_pre_natal_precoec), a adequação do pré-natal (porc_pre_natal_adequado) e a porcentagem de usuárias exclusivas do Sistema Único de Saúde (porc_exclusivas_SUS). Todas essas variáveis foram analisadas no nível das Redes Regionais de Atenção à Saúde (RRAS) para o ano de 2024.
+Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. A descrição das variáveis, suas respectivas abreviações e anos de referência está apresentada na Tabela 1.
+
+Entre os indicadores de prematuridade, consideraram-se a taxa de partos prematuros, a taxa de partos prematuros eletivos e a taxa de partos prematuros espontâneos, sendo esses indicadores relativos ao ano de 2024.
+
+No que se refere aos indicadores de saúde materna e fetal, foram analisadas a razão de mortalidade materna, a taxa de mortalidade fetal e a porcentagem de óbitos fetais potencialmente evitáveis, todos referentes ao ano de 2024. Como indicador socioeconômico, utilizou-se o Índice de Desenvolvimento Humano, calculado em 2022.
+
+Além disso, foram incluídos indicadores de acesso e qualidade da atenção à saúde, como a cobertura populacional da atenção básica (2024), a cobertura da Estratégia Saúde da Família (2020), a porcentagem de mulheres com mais de sete consultas de pré-natal (2024), o início precoce do pré-natal (2024), a adequação do pré-natal (2024) e a porcentagem de usuárias exclusivas do Sistema Único de Saúde (2024).
+
+Todas essas variáveis foram analisadas no nível das Redes Regionais de Atenção à Saúde (RRAS), considerando, majoritariamente, o ano de 2024.
+
+```{r, echo=FALSE}
+#| label: tabela-descricao
+#| tbl-cap: "Tabela 1: Descrição das variáveis utilizadas na análise."
+
+tabela_variaveis <- data.frame(
+  Variável = c(
+    "Taxa de partos prematuros",
+    "Taxa de partos prematuros eletivos",
+    "Taxa de partos prematuros espontâneos",
+    "Razão de mortalidade materna",
+    "Taxa de mortalidade fetal",
+    "Porcentagem de óbitos fetais potencialmente evitáveis",
+    "Índice de Desenvolvimento Humano",
+    "Cobertura populacional da atenção básica",
+    "Cobertura da Estratégia Saúde da Família",
+    "Porcentagem de mulheres com mais de sete consultas de pré-natal",
+    "Início precoce do pré-natal",
+    "Adequação do pré-natal",
+    "Porcentagem de usuárias exclusivas do SUS"
+  ),
+  Abreviação = c(
+    "tx_PP",
+    "tx_PPel",
+    "tx_PPes",
+    "rz_mort_mat",
+    "tx_mort_fetal",
+    "porc_obitos_fetais_evitaveis",
+    "IDH_2022",
+    "cob_pop_AB",
+    "cob_pop_SF",
+    "porc_mais_7_pre_natal",
+    "porc_pre_natal_precoce",
+    "porc_pre_natal_adequado",
+    "porc_exclusivas_SUS"
+  ),
+  Ano = c(
+    2024, 2024, 2024,
+    2024, 2024, 2024,
+    2022,
+    2024, 2020,
+    2024, 2024, 2024, 2024
+  )
+)
+
+kable(tabela_variaveis, align = "lcc") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = F)
+```
+
 
 # Análise de correlação
 
@@ -144,6 +202,8 @@ tabela_p <- matriz_p %>%
     rho = round(rho, 4),
     p_valor = round(p_valor, 4)
   )
+
+
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
@@ -181,7 +241,7 @@ for (i in seq_along(plots)) {
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 #| label: tabela-valor-p-2024
-#| tbl-cap: "Tabela 1: Valores p e coeficientes de Spearman significativos entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
+#| tbl-cap: "Tabela 2: Valores p e coeficientes de Spearman significativos entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024."
 # tabela final
 tabela_p %>%
   kable(col.names = c("Indicadores", "Coeficiente", "Valor p", "Conclusão do teste"),
@@ -190,7 +250,7 @@ tabela_p %>%
                 full_width = F)
 ```
 
-Observa-se inicialmente na Figura 1 e na Tabela 1 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos ($\rho$ = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca ($\rho$ = 0,31), sugerindo menor contribuição relativa desse componente.
+Observa-se inicialmente na Figura 1 e na Tabela 2 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos ($\rho$ = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca ($\rho$ = 0,31), sugerindo menor contribuição relativa desse componente.
 
 A taxa de partos prematuros espontâneos apresentou correlações positivas moderadas a fortes com indicadores de cobertura e acesso à atenção primária, como a cobertura da Estratégia Saúde da Família ($\rho$ = 0,60), cobertura da atenção básica ($\rho$ = 0,48) e proporção de mulheres com mais de sete consultas de pré-natal ($\rho$ = 0,60). Por outro lado, a taxa de prematuridade espontânea apresentou correlação negativa com a taxa de mortalidade fetal ($\rho$ = -0,35).
 
