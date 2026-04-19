@@ -74,7 +74,13 @@ div.csl-indent {
   <li><a href="#correlação-de-spearman" id="toc-correlação-de-spearman" class="nav-link" data-scroll-target="#correlação-de-spearman">Correlação de Spearman</a></li>
   <li><a href="#variáveis-consideradas-nas-análise" id="toc-variáveis-consideradas-nas-análise" class="nav-link" data-scroll-target="#variáveis-consideradas-nas-análise">Variáveis consideradas nas análise</a></li>
   </ul></li>
-  <li><a href="#análise-de-correlação" id="toc-análise-de-correlação" class="nav-link" data-scroll-target="#análise-de-correlação">Análise de correlação</a></li>
+  <li><a href="#análise-de-correlação" id="toc-análise-de-correlação" class="nav-link" data-scroll-target="#análise-de-correlação">Análise de correlação</a>
+  <ul class="collapse">
+  <li><a href="#visão-geral-dos-indicadores" id="toc-visão-geral-dos-indicadores" class="nav-link" data-scroll-target="#visão-geral-dos-indicadores">Visão geral dos indicadores</a></li>
+  <li><a href="#indicador-taxa-de-partos-prematuros" id="toc-indicador-taxa-de-partos-prematuros" class="nav-link" data-scroll-target="#indicador-taxa-de-partos-prematuros">Indicador taxa de partos prematuros</a></li>
+  <li><a href="#indicador-taxa-de-partos-prematuros-eletivos" id="toc-indicador-taxa-de-partos-prematuros-eletivos" class="nav-link" data-scroll-target="#indicador-taxa-de-partos-prematuros-eletivos">Indicador taxa de partos prematuros eletivos</a></li>
+  <li><a href="#indicador-taxa-de-partos-prematuros-espontâneos" id="toc-indicador-taxa-de-partos-prematuros-espontâneos" class="nav-link" data-scroll-target="#indicador-taxa-de-partos-prematuros-espontâneos">Indicador taxa de partos Prematuros espontâneos</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -102,19 +108,15 @@ div.csl-indent {
 <p>Para a realização deste estudo, foram utilizados dados provenientes das bases oficiais do Sistema de Informação sobre Nascidos Vivos (SINASC), com foco nos dados de parturientes residentes no Estado de São Paulo, no ano de 2024. Realizando associações com dados fornecidos pelo Departamento de Gestão Interfederativa e Participativa (DGIP) da Secretaria Executiva (SE) do Ministério da Saúde (MS), e disponibilizados pelo Departamento de Monitoramento, Avaliação e Disseminação de Informações Estratégicas em Saúde (DEMAS) da Secretaria de Informação e Saúde Digital (SEIDIGI) <span class="citation" data-cites="infoms">(<a href="#ref-infoms" role="doc-biblioref">Ministério da Saúde 2025</a>)</span>, também foi possível separar os registros em suas respectivas Redes Regionais de Atenção à Saúde (RRAS). A partir disso, realizou-se uma limpeza nos dados para identificar os casos em que a idade gestacional era maior ou igual a 22 semanas ou, nos casos em que não havia informação sobre a idade gestacional, identificar os casos em que o peso do recém-nascido era maior que 500 gramas. Dessa maneira, obteve-se os dados gerais dos nascidos vivos do Estado de São Paulo nos anos de 2012.</p>
 <p>Para identificar os partos prematuros, aplicou-se um filtro de idade gestacional aos dados de nascidos vivos. Foram classificados como parto prematuro (PP) todos os nascimentos com idade gestacional entre 22 e 36 semanas. Na etapa seguinte, para distinguir entre partos prematuros espontâneos (PPes) e eletivos (PPel), foram utilizadas as variáveis STTRABPART, que indica a ocorrência de trabalho de parto induzido, e STCESPARTO, que informa se foi realizada cesárea antes do início do trabalho de parto.</p>
 <p>Assim, caso não houvesse trabalho de parto induzido e não houvesse cesárea antes do início do trabalho de parto, os dados eram classificados como partos prematuros espontâneos. Os demais casos em que havia alguma informação sobre o trabalho de parto foram classificados como partos prematuros eletivos. A tabela a seguir apresenta detalhadamente a classificação dos tipos de parto.</p>
-<div class="cell" data-warnings="false" data-tab-label="{}">
-<table class="table table-sm table-striped small">
-<caption>Classificação do tipo de parto</caption>
-<colgroup>
-<col style="width: 36%">
-<col style="width: 40%">
-<col style="width: 23%">
-</colgroup>
+<div class="cell" data-warnings="false">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<caption>Tabela 1: Classificação do tipo de parto. </caption>
 <thead>
 <tr class="header">
-<th style="text-align: center;">Trabalho de parto induzido</th>
-<th style="text-align: center;">Cersárea antes do trabalho de parto</th>
-<th style="text-align: center;">Resultado do parto</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Trabalho de parto induzido</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Cersárea antes do trabalho de parto</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Resultado do parto</th>
 </tr>
 </thead>
 <tbody>
@@ -165,6 +167,9 @@ div.csl-indent {
 </tr>
 </tbody>
 </table>
+
+
+</div>
 </div>
 <p>As porcentagens utilizadas ao longo do relatório foram calculadas diretamente a partir dos valores absolutos obtidos nas filtragens anteriores. A porcentagem de partos prematuros em relação ao total de nascidos vivos foi obtida dividindo-se o número total de partos prematuros pelo total de nascidos vivos e multiplicando o resultado por 100. De maneira semelhante, esse processo foi aplicado para calcular as porcentagens de partos prematuros eletivos e partos prematuros espontâneos em relação ao total de nascidos vivos e ao total de partos prematuros, criando diferentes taxas para a análise. Empregando esse procedimento para todos esses casos, foi possível adicionar ao banco de dados informações relativas aos anos no Estado de São Paulo como um todo e também informações relativas aos anos e às RRAS separadamente.</p>
 <p>A análise das associações entre as variáveis foi realizada por meio do coeficiente de correlação de Spearman. A escolha desse método se justifica por se tratar de uma medida não paramétrica, adequada para avaliar relações monotônicas entre variáveis, sem a necessidade de assumir normalidade na distribuição dos dados.</p>
@@ -196,7 +201,7 @@ div.csl-indent {
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
-<caption>Tabela 1: Descrição das variáveis utilizadas na análise. </caption>
+<caption>Tabela 2: Descrição das variáveis utilizadas na análise. </caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Variável</th>
@@ -280,91 +285,94 @@ div.csl-indent {
 </section>
 <section id="análise-de-correlação" class="level1">
 <h1>Análise de correlação</h1>
+<section id="visão-geral-dos-indicadores" class="level2">
+<h2 class="anchored" data-anchor-id="visão-geral-dos-indicadores">Visão geral dos indicadores</h2>
 <p>Apresentam-se a seguir os gráficos e tabelas de correlação, assim como os gráficos de dispersão e suas respectivas interpretações, com ênfase nos indicadores relacionados à prematuridade.</p>
-<div id="fig-corrplot" class="quarto-figure quarto-figure-center anchored">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="f3_graficos/corrplot.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Matriz de correlação entre variáveis</figcaption>
+<p><img src="f3_graficos/corrplot.jpg" class="img-fluid figure-img" width="1250"></p>
+<figcaption class="figure-caption">Figura 1: Matriz de correlação dos indicadores.</figcaption>
 </figure>
 </div>
+</div>
+</div>
+<p>[Aqui dá para adicionar os comentarios relativos as váriaveis que não são de prematuridade]</p>
+</section>
+<section id="indicador-taxa-de-partos-prematuros" class="level2">
+<h2 class="anchored" data-anchor-id="indicador-taxa-de-partos-prematuros">Indicador taxa de partos prematuros</h2>
 <div class="cell">
 <div class="cell-output-display">
 <table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
-<caption>Tabela 2: Valores p e coeficientes de Spearman significativos entre os indicadores de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde no ano de 2024. </caption>
+<caption>Tabela 3: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde. </caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Indicadores</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Coeficiente</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">Valor p</th>
-<th style="text-align: center;" data-quarto-table-cell-role="th">Conclusão do teste</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Indicador</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Valor-p</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Coeficiente de correlação</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">porc_mais_7_pre_natal x porc_pre_natal_adequado</td>
-<td style="text-align: left;">0.9293</td>
-<td style="text-align: center;">0.0000</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Taxa de partos prematuros eletivos</td>
+<td style="text-align: left;">0.0006</td>
+<td style="text-align: center;">0.7276</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">cob_pop_AB x cob_pop_SF</td>
-<td style="text-align: left;">0.7888</td>
-<td style="text-align: center;">0.0001</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Taxa de partos prematuros espontâneos</td>
+<td style="text-align: left;">0.2121</td>
+<td style="text-align: center;">0.3090</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">tx_PP x tx_PPel</td>
-<td style="text-align: left;">0.7276</td>
-<td style="text-align: center;">0.0006</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Razão de mortalidade materna</td>
+<td style="text-align: left;">0.7109</td>
+<td style="text-align: center;">-0.0939</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">IDH_2022 x porc_exclusivas_SUS</td>
-<td style="text-align: left;">-0.7176</td>
-<td style="text-align: center;">0.0008</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Taxa de mortalidade fetal</td>
+<td style="text-align: left;">0.7597</td>
+<td style="text-align: center;">0.0776</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">cob_pop_AB x porc_exclusivas_SUS</td>
-<td style="text-align: left;">0.6105</td>
-<td style="text-align: center;">0.0071</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Porcentagem de óbitos fetais potencialmente evitáveis</td>
+<td style="text-align: left;">0.7945</td>
+<td style="text-align: center;">-0.0661</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">cob_pop_SF x tx_PPes</td>
-<td style="text-align: left;">0.6016</td>
-<td style="text-align: center;">0.0083</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Índice de Desenvolvimento Humano</td>
+<td style="text-align: left;">0.7540</td>
+<td style="text-align: center;">0.0795</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">porc_mais_7_pre_natal x tx_PPes</td>
-<td style="text-align: left;">0.5995</td>
-<td style="text-align: center;">0.0086</td>
-<td style="text-align: center;">Altamente significativa</td>
+<td style="text-align: left;">Cobertura populacional da atenção básica</td>
+<td style="text-align: left;">0.9319</td>
+<td style="text-align: center;">0.0217</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">porc_pre_natal_precoce x rz_mort_mat</td>
-<td style="text-align: left;">-0.5480</td>
-<td style="text-align: center;">0.0186</td>
-<td style="text-align: center;">Significativa</td>
+<td style="text-align: left;">Cobertura da Estratégia Saúde da Família</td>
+<td style="text-align: left;">0.7170</td>
+<td style="text-align: center;">-0.0918</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">porc_mais_7_pre_natal x tx_mort_fetal</td>
-<td style="text-align: left;">-0.5067</td>
-<td style="text-align: center;">0.0319</td>
-<td style="text-align: center;">Significativa</td>
+<td style="text-align: left;">Porcentagem de mulheres com mais de sete consultas de pré-natal</td>
+<td style="text-align: left;">0.7664</td>
+<td style="text-align: center;">-0.0753</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">cob_pop_AB x tx_PPes</td>
-<td style="text-align: left;">0.4788</td>
-<td style="text-align: center;">0.0444</td>
-<td style="text-align: center;">Significativa</td>
+<td style="text-align: left;">Início precoce do pré-natal</td>
+<td style="text-align: left;">0.9514</td>
+<td style="text-align: center;">0.0155</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">porc_pre_natal_adequado x tx_PPes</td>
-<td style="text-align: left;">0.4788</td>
-<td style="text-align: center;">0.0444</td>
-<td style="text-align: center;">Significativa</td>
+<td style="text-align: left;">Adequação do pré-natal</td>
+<td style="text-align: left;">0.9481</td>
+<td style="text-align: center;">-0.0165</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Porcentagem de usuárias exclusivas do SUS</td>
+<td style="text-align: left;">0.9287</td>
+<td style="text-align: center;">0.0227</td>
 </tr>
 </tbody>
 </table>
@@ -372,93 +380,231 @@ div.csl-indent {
 
 </div>
 </div>
-<p>Observa-se inicialmente na Figura 1 e na Tabela 2 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos (<span class="math inline">\(\rho\)</span> = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca (<span class="math inline">\(\rho\)</span> = 0,31), sugerindo menor contribuição relativa desse componente.</p>
-<p>A taxa de partos prematuros espontâneos apresentou correlações positivas moderadas a fortes com indicadores de cobertura e acesso à atenção primária, como a cobertura da Estratégia Saúde da Família (<span class="math inline">\(\rho\)</span> = 0,60), cobertura da atenção básica (<span class="math inline">\(\rho\)</span> = 0,48) e proporção de mulheres com mais de sete consultas de pré-natal (<span class="math inline">\(\rho\)</span> = 0,60). Por outro lado, a taxa de prematuridade espontânea apresentou correlação negativa com a taxa de mortalidade fetal (<span class="math inline">\(\rho\)</span> = -0,35).</p>
-<p>Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p &lt; 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente.</p>
-<p>De forma semelhante, a taxa de partos prematuros eletivos apresentou correlação significativa apenas com a prematuridade total, não sendo observadas associações estatisticamente significativas com os demais indicadores analisados.</p>
-<p>Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044).</p>
-<p>Além disso, avaliando as demais variáveis, verificou-se uma associação positiva altamente significativa (<span class="math inline">\(\rho\)</span> = 0.9293; p = 0.0000) entre a proporção de mulheres com mais de 7 consultas de pré-natal e a proporção de pré-natal adequado, indicando que maiores percentuais de realização de consultas estão relacionados a maior adequação do acompanhamento pré-natal. De forma consistente, a cobertura populacional de atenção básica apresenta associação positiva altamente significativa com a cobertura por equipes de Saúde da Família (<span class="math inline">\(\rho\)</span> = 0.7888; p = 0.0001), evidenciando que maiores níveis de uma cobertura estão relacionados a maiores níveis da outra.</p>
-<p>Por outro lado, observou-se que o IDH de 2022 apresenta associação negativa altamente significativa com a proporção de usuárias exclusivas do SUS (<span class="math inline">\(\rho\)</span> = −0.7176; p = 0.0008), indicando que valores mais elevados de IDH estão relacionados a menores proporções dessa população. Em contrapartida, a cobertura de atenção básica mostra associação positiva altamente significativa com a proporção de usuárias exclusivas do SUS (<span class="math inline">\(\rho\)</span> = 0.6105; p = 0.0071), sugerindo que maiores níveis de cobertura estão associados a maiores proporções de usuárias exclusivas do SUS.</p>
-<p>Por fim, pode-se observar que a proporção de início precoce do pré-natal apresenta associação negativa significativa com a razão de mortalidade materna (<span class="math inline">\(\rho\)</span> = −0.5480; p = 0.0186), assim como a proporção de mulheres com mais de 7 consultas de pré-natal também apresenta associação negativa significativa com a taxa de mortalidade fetal (<span class="math inline">\(\rho\)</span> = −0.5067; p = 0.0319), indicando que o pré-natal iniciado precocemente está relacionado a menores razões de morte materna e que mais de 7 consultas de pré-natal estão relacionadas a menores taxas de mortalidade fetal.</p>
-<p>A seguir, tem-se os gráficos de dispersão das relações entre as variáveis com correlações significativas de acordo com a correlação de Spearman, com o intuito de complementar as análises realizadas através da correlação de Spearman.</p>
-<div id="fig-corr1" class="quarto-figure quarto-figure-center anchored">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="f3_graficos/grafico_1.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;2: Dispersão entre porc_mais_7_pre_natal e porc_pre_natal_adequado</figcaption>
+<p><img src="analise_correlacao_rras_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figura 2: Dispersão entre a taxa de partos prematuros e os demais indicadores.</figcaption>
 </figure>
 </div>
-<p>O gráfico de dispersão entre a porcentagem de mulheres com mais de 7 consultas de pré-natal e a porcentagem de pré-natal adequado revela uma associação positiva altamente significativa, perceptível pela reta de tendência geral acentuada, indicando que maiores percentuais de consultas estão diretamente relacionados a uma maior adequação do acompanhamento nas redes regionais. As RRAS 11, 12 e 18 apresentam os maiores índices em ambos os indicadores, situando-se no extremo superior direito da distribuição, enquanto as RRAS 2 e 5 ocupam o extremo oposto com os menores valores registrados. Nota-se que a RRAS 15 apresenta um desvio em relação à tendência geral.</p>
-<div id="fig-corr2" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_2.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;3: Dispersão entre cob_pop_AB e cob_pop_SF</figcaption>
-</figure>
 </div>
-<p>A análise da cobertura populacional de atenção básica em relação à cobertura por equipes de Saúde da Família demonstra uma associação positiva altamente significativa. As RRAS 11, 10 e 12 destacam-se pelas maiores porcentagens de cobertura em ambas as modalidades. Em contrapartida, as RRAS 4, 5 e 16 apresentam coberturas de Saúde da Família que se posicionam bem abaixo da linha de tendência central.</p>
-<div id="fig-corr3" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_3.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;4: Dispersão entre tx_PP e tx_PPel</figcaption>
-</figure>
 </div>
-<p>Na relação entre a taxa de partos prematuros e a taxa de partos prematuros eletivos, as RRAS 18 e 5 registram as taxas mais elevadas para ambos os indicadores, ao passo que as RRAS 8, 4 e 6 concentram-se nos menores valores tanto de prematuridade total quanto de prematuridade eletiva.</p>
-<div id="fig-corr4" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_4.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;5: Dispersão entre IDH_2022 e porc_exclusivas_SUS</figcaption>
-</figure>
-</div>
-<p>Na Figura 4, observa-se que as RRAS 6 e 1 ocupam o quadrante inferior direito do gráfico, caracterizado pelo maior IDH e menor dependência exclusiva do SUS, enquanto as RRAS 10, 8 e 11 situam-se no extremo oposto, apresentando menores índices de IDH acompanhados das maiores proporções de usuárias exclusivas.</p>
-<div id="fig-corr5" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_5.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;6: Dispersão entre cob_pop_AB e porc_exclusivas_SUS</figcaption>
-</figure>
-</div>
-<p>Na Figura 5, percebe-se que as RRAS 10, 11 e 12 encontram-se no quadrante superior direito, apresentando altos índices em ambos os indicadores simultaneamente. Em contrapartida, a RRAS 1 configura-se como um desvio à tendência geral da amostra, mantendo uma cobertura de atenção básica superior a 70%, porém registrando a menor proporção de usuárias exclusivas do SUS entre todas as redes regionais.</p>
-<div id="fig-corr6" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_6.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;7: Dispersão entre cob_pop_SF e tx_PPes</figcaption>
-</figure>
-</div>
-<p>Na dispersão entre a cobertura populacional da Estratégia Saúde da Família e a taxa de partos prematuros espontâneos, a RRAS 11 posicionou-se no extremo superior de cobertura e taxa, enquanto as RRAS 2, 4 e 5 apresentam os menores valores para ambos os indicadores. A RRAS 15 destaca-se como um ponto atípico, apresentando a maior taxa de prematuridade espontânea do conjunto de dados, apesar de possuir uma cobertura de Saúde da Família em patamar intermediário.</p>
-<div id="fig-corr7" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_7.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;8: Dispersão entre porc_mais_7_pre_natal e tx_PPes</figcaption>
-</figure>
-</div>
-<p>Pelo gráfico, percebe-se que as RRAS 11 e 12 posicionam-se com altos valores em ambos os indicadores, enquanto a RRAS 2 apresenta os menores índices tanto de consultas quanto de prematuridade espontânea. A RRAS 15 aparece novamente como um ponto atípico na distribuição, apresentando a maior taxa de prematuridade espontânea entre todas as regiões, apesar de possuir um percentual de consultas superior a 85%.</p>
-<div id="fig-corr8" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_8.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;9: Dispersão entre porc_pre_natal_precoce e rz_mort_mat</figcaption>
-</figure>
-</div>
-<p>O gráfico de dispersão da relação entre porcentagens de pré-natal precoce e razão de mortalidade materna mostra que as RRAS 18, 15 e 7 concentram-se no quadrante superior esquerdo, com menores percentuais de início precoce e razões de mortalidade mais elevadas. Por outro lado, a RRAS 10 apresenta o maior percentual de início precoce do pré-natal e a menor razão de mortalidade materna do conjunto de dados, posicionando-se no extremo inferior direito da tendência observada.</p>
-<div id="fig-corr9" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_9.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;10: Dispersão entre porc_mais_7_pre_natal e tx_mort_fetal</figcaption>
-</figure>
-</div>
-<p>No gráfico de dispersão, a RRAS 2 destaca-se no extremo superior esquerdo, registrando a maior taxa de mortalidade fetal acompanhada pelo menor percentual de realização de mais de 7 consultas. No extremo oposto, as RRAS 10, 12, 16 e 15 situam-se no quadrante inferior direito, apresentando alta cobertura de consultas e as menores taxas de mortalidade fetal observadas no período.</p>
-<div id="fig-corr10" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_10.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;11: Dispersão entre cob_pop_AB e tx_PPes</figcaption>
-</figure>
-</div>
-<p>No gráfico da Figura 10, é visto que as RRAS 11 e 12 posicionam-se no extremo superior direito da tendência, enquanto as RRAS 2 e 5 ocupam o extremo inferior esquerdo. A RRAS 15 destaca-se como um ponto isolado no topo da distribuição, apresentando a maior taxa de prematuridade espontânea do estado para um nível intermediário de cobertura assistencial, ao passo que as RRAS 4 e 16 registram taxas de prematuridade espontânea reduzidas apesar de possuírem coberturas de atenção básica superiores a 70%.</p>
-<div id="fig-corr11" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="f3_graficos/grafico_11.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure&nbsp;12: Dispersão entre porc_pre_natal_adequado e tx_PPes</figcaption>
-</figure>
-</div>
-<p>Pelo gráfico de dispersão da relação entre a porcentagem de pré-natais adequados e a taxa de prematuridade espontânea, as RRAS 11 e 12 situam-se no quadrante superior direito, combinando altos índices de adequação de pré-natal e taxas elevadas de prematuridade espontânea, enquanto a RRAS 2 posiciona-se no extremo oposto com os menores valores para ambas as variáveis. A RRAS 15 configura-se novamente como o principal desvio da tendência central, mantendo a taxa mais elevada de prematuridade espontânea da amostra, enquanto a RRAS 16 apresenta uma das menores taxas observadas.</p>
+</section>
+<section id="indicador-taxa-de-partos-prematuros-eletivos" class="level2">
+<h2 class="anchored" data-anchor-id="indicador-taxa-de-partos-prematuros-eletivos">Indicador taxa de partos prematuros eletivos</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<caption>Tabela 4: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade eletiva e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde. </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Indicador</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Valor-p</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Coeficiente de correlação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Taxa de partos prematuros</td>
+<td style="text-align: left;">0.0006</td>
+<td style="text-align: center;">0.7276</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Taxa de partos prematuros espontâneos</td>
+<td style="text-align: left;">0.8354</td>
+<td style="text-align: center;">-0.0527</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Razão de mortalidade materna</td>
+<td style="text-align: left;">0.2128</td>
+<td style="text-align: center;">-0.3086</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Taxa de mortalidade fetal</td>
+<td style="text-align: left;">0.9708</td>
+<td style="text-align: center;">0.0093</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Porcentagem de óbitos fetais potencialmente evitáveis</td>
+<td style="text-align: left;">0.7850</td>
+<td style="text-align: center;">0.0692</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Índice de Desenvolvimento Humano</td>
+<td style="text-align: left;">0.3854</td>
+<td style="text-align: center;">0.2178</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cobertura populacional da atenção básica</td>
+<td style="text-align: left;">0.7538</td>
+<td style="text-align: center;">-0.0795</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cobertura da Estratégia Saúde da Família</td>
+<td style="text-align: left;">0.2953</td>
+<td style="text-align: center;">-0.2611</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Porcentagem de mulheres com mais de sete consultas de pré-natal</td>
+<td style="text-align: left;">0.7789</td>
+<td style="text-align: center;">-0.0712</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Início precoce do pré-natal</td>
+<td style="text-align: left;">0.3451</td>
+<td style="text-align: center;">0.2363</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Adequação do pré-natal</td>
+<td style="text-align: left;">0.6418</td>
+<td style="text-align: center;">0.1177</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Porcentagem de usuárias exclusivas do SUS</td>
+<td style="text-align: left;">0.7600</td>
+<td style="text-align: center;">-0.0774</td>
+</tr>
+</tbody>
+</table>
 
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analise_correlacao_rras_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figura 3: Dispersão entre a taxa de partos prematuros eletivos e os demais indicadores.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="indicador-taxa-de-partos-prematuros-espontâneos" class="level2">
+<h2 class="anchored" data-anchor-id="indicador-taxa-de-partos-prematuros-espontâneos">Indicador taxa de partos Prematuros espontâneos</h2>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<caption>Tabela 5: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade espontânea e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde. </caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Indicador</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Valor-p</th>
+<th style="text-align: center;" data-quarto-table-cell-role="th">Coeficiente de correlação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Taxa de partos prematuros</td>
+<td style="text-align: left;">0.2121</td>
+<td style="text-align: center;">0.3090</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Taxa de partos prematuros eletivos</td>
+<td style="text-align: left;">0.8354</td>
+<td style="text-align: center;">-0.0527</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Razão de mortalidade materna</td>
+<td style="text-align: left;">0.7013</td>
+<td style="text-align: center;">-0.0972</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Taxa de mortalidade fetal</td>
+<td style="text-align: left;">0.1505</td>
+<td style="text-align: center;">-0.3532</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Porcentagem de óbitos fetais potencialmente evitáveis</td>
+<td style="text-align: left;">0.6208</td>
+<td style="text-align: center;">-0.1251</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Índice de Desenvolvimento Humano</td>
+<td style="text-align: left;">0.7196</td>
+<td style="text-align: center;">-0.0910</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cobertura populacional da atenção básica</td>
+<td style="text-align: left;">0.0444</td>
+<td style="text-align: center;">0.4788</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cobertura da Estratégia Saúde da Família</td>
+<td style="text-align: left;">0.0083</td>
+<td style="text-align: center;">0.6016</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Porcentagem de mulheres com mais de sete consultas de pré-natal</td>
+<td style="text-align: left;">0.0086</td>
+<td style="text-align: center;">0.5995</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Início precoce do pré-natal</td>
+<td style="text-align: left;">0.1786</td>
+<td style="text-align: center;">0.3318</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Adequação do pré-natal</td>
+<td style="text-align: left;">0.0444</td>
+<td style="text-align: center;">0.4788</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Porcentagem de usuárias exclusivas do SUS</td>
+<td style="text-align: left;">0.1678</td>
+<td style="text-align: center;">0.3397</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="analise_correlacao_rras_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figura 4: Dispersão entre a taxa de partos prematuros espontâneos e os demais indicadores.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<!-- Observa-se inicialmente na Figura 1 e na Tabela 2 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos ($\rho$ = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca ($\rho$ = 0,31), sugerindo menor contribuição relativa desse componente. -->
+<!-- A taxa de partos prematuros espontâneos apresentou correlações positivas moderadas a fortes com indicadores de cobertura e acesso à atenção primária, como a cobertura da Estratégia Saúde da Família ($\rho$ = 0,60), cobertura da atenção básica ($\rho$ = 0,48) e proporção de mulheres com mais de sete consultas de pré-natal ($\rho$ = 0,60). Por outro lado, a taxa de prematuridade espontânea apresentou correlação negativa com a taxa de mortalidade fetal ($\rho$ = -0,35). -->
+<!-- Os resultados do teste de Spearman indicam que a taxa de partos prematuros totais apresentou correlação estatisticamente significativa apenas com a taxa de partos prematuros eletivos (p \< 0,001), evidenciando que a variação da prematuridade total é fortemente influenciada por esse componente. -->
+<!-- De forma semelhante, a taxa de partos prematuros eletivos apresentou correlação significativa apenas com a prematuridade total, não sendo observadas associações estatisticamente significativas com os demais indicadores analisados. -->
+<!-- Por outro lado, a taxa de partos prematuros espontâneos apresentou correlações estatisticamente significativas com indicadores de acesso e qualidade da atenção à saúde, incluindo a cobertura da atenção básica (p = 0,044), a cobertura da Estratégia Saúde da Família (p = 0,008), a proporção de mulheres com mais de sete consultas de pré-natal (p = 0,009) e a adequação do pré-natal (p = 0,044). -->
+<!-- Além disso, avaliando as demais variáveis, verificou-se uma associação positiva altamente significativa ($\rho$ = 0.9293; p = 0.0000) entre a proporção de mulheres com mais de 7 consultas de pré-natal e a proporção de pré-natal adequado, indicando que maiores percentuais de realização de consultas estão relacionados a maior adequação do acompanhamento pré-natal. De forma consistente, a cobertura populacional de atenção básica apresenta associação positiva altamente significativa com a cobertura por equipes de Saúde da Família ($\rho$ = 0.7888; p = 0.0001), evidenciando que maiores níveis de uma cobertura estão relacionados a maiores níveis da outra. -->
+<!-- Por outro lado, observou-se que o IDH de 2022 apresenta associação negativa altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = −0.7176; p = 0.0008), indicando que valores mais elevados de IDH estão relacionados a menores proporções dessa população. Em contrapartida, a cobertura de atenção básica mostra associação positiva altamente significativa com a proporção de usuárias exclusivas do SUS ($\rho$ = 0.6105; p = 0.0071), sugerindo que maiores níveis de cobertura estão associados a maiores proporções de usuárias exclusivas do SUS. -->
+<!-- Por fim, pode-se observar que a proporção de início precoce do pré-natal apresenta associação negativa significativa com a razão de mortalidade materna ($\rho$ = −0.5480; p = 0.0186), assim como a proporção de mulheres com mais de 7 consultas de pré-natal também apresenta associação negativa significativa com a taxa de mortalidade fetal ($\rho$ = −0.5067; p = 0.0319), indicando que o pré-natal iniciado precocemente está relacionado a menores razões de morte materna e que mais de 7 consultas de pré-natal estão relacionadas a menores taxas de mortalidade fetal. -->
+<!-- A seguir, tem-se os gráficos de dispersão das relações entre as variáveis com correlações significativas de acordo com a correlação de Spearman, com o intuito de complementar as análises realizadas através da correlação de Spearman. -->
+<!-- ![Dispersão entre porc_mais_7_pre_natal e porc_pre_natal_adequado](f3_graficos/grafico_1.jpg){#fig-corr1} -->
+<!-- O gráfico de dispersão entre a porcentagem de mulheres com mais de 7 consultas de pré-natal e a porcentagem de pré-natal adequado revela uma associação positiva altamente significativa, perceptível pela reta de tendência geral acentuada, indicando que maiores percentuais de consultas estão diretamente relacionados a uma maior adequação do acompanhamento nas redes regionais. As RRAS 11, 12 e 18 apresentam os maiores índices em ambos os indicadores, situando-se no extremo superior direito da distribuição, enquanto as RRAS 2 e 5 ocupam o extremo oposto com os menores valores registrados. Nota-se que a RRAS 15 apresenta um desvio em relação à tendência geral. -->
+<!-- ![Dispersão entre cob_pop_AB e cob_pop_SF](f3_graficos/grafico_2.jpg){#fig-corr2} -->
+<!-- A análise da cobertura populacional de atenção básica em relação à cobertura por equipes de Saúde da Família demonstra uma associação positiva altamente significativa. As RRAS 11, 10 e 12 destacam-se pelas maiores porcentagens de cobertura em ambas as modalidades. Em contrapartida, as RRAS 4, 5 e 16 apresentam coberturas de Saúde da Família que se posicionam bem abaixo da linha de tendência central. -->
+<!-- ![Dispersão entre tx_PP e tx_PPel](f3_graficos/grafico_3.jpg){#fig-corr3} -->
+<!-- Na relação entre a taxa de partos prematuros e a taxa de partos prematuros eletivos, as RRAS 18 e 5 registram as taxas mais elevadas para ambos os indicadores, ao passo que as RRAS 8, 4 e 6 concentram-se nos menores valores tanto de prematuridade total quanto de prematuridade eletiva. -->
+<!-- ![Dispersão entre IDH_2022 e porc_exclusivas_SUS](f3_graficos/grafico_4.jpg){#fig-corr4} -->
+<!-- Na Figura 4, observa-se que as RRAS 6 e 1 ocupam o quadrante inferior direito do gráfico, caracterizado pelo maior IDH e menor dependência exclusiva do SUS, enquanto as RRAS 10, 8 e 11 situam-se no extremo oposto, apresentando menores índices de IDH acompanhados das maiores proporções de usuárias exclusivas. -->
+<!-- ![Dispersão entre cob_pop_AB e porc_exclusivas_SUS](f3_graficos/grafico_5.jpg){#fig-corr5} -->
+<!-- Na Figura 5, percebe-se que as RRAS 10, 11 e 12 encontram-se no quadrante superior direito, apresentando altos índices em ambos os indicadores simultaneamente. Em contrapartida, a RRAS 1 configura-se como um desvio à tendência geral da amostra, mantendo uma cobertura de atenção básica superior a 70%, porém registrando a menor proporção de usuárias exclusivas do SUS entre todas as redes regionais. -->
+<!-- ![Dispersão entre cob_pop_SF e tx_PPes](f3_graficos/grafico_6.jpg){#fig-corr6} -->
+<!-- Na dispersão entre a cobertura populacional da Estratégia Saúde da Família e a taxa de partos prematuros espontâneos, a RRAS 11 posicionou-se no extremo superior de cobertura e taxa, enquanto as RRAS 2, 4 e 5 apresentam os menores valores para ambos os indicadores. A RRAS 15 destaca-se como um ponto atípico, apresentando a maior taxa de prematuridade espontânea do conjunto de dados, apesar de possuir uma cobertura de Saúde da Família em patamar intermediário. -->
+<!-- ![Dispersão entre porc_mais_7_pre_natal e tx_PPes](f3_graficos/grafico_7.jpg){#fig-corr7} -->
+<!-- Pelo gráfico, percebe-se que as RRAS 11 e 12 posicionam-se com altos valores em ambos os indicadores, enquanto a RRAS 2 apresenta os menores índices tanto de consultas quanto de prematuridade espontânea. A RRAS 15 aparece novamente como um ponto atípico na distribuição, apresentando a maior taxa de prematuridade espontânea entre todas as regiões, apesar de possuir um percentual de consultas superior a 85%. -->
+<!-- ![Dispersão entre porc_pre_natal_precoce e rz_mort_mat](f3_graficos/grafico_8.jpg){#fig-corr8} -->
+<!-- O gráfico de dispersão da relação entre porcentagens de pré-natal precoce e razão de mortalidade materna mostra que as RRAS 18, 15 e 7 concentram-se no quadrante superior esquerdo, com menores percentuais de início precoce e razões de mortalidade mais elevadas. Por outro lado, a RRAS 10 apresenta o maior percentual de início precoce do pré-natal e a menor razão de mortalidade materna do conjunto de dados, posicionando-se no extremo inferior direito da tendência observada. -->
+<!-- ![Dispersão entre porc_mais_7_pre_natal e tx_mort_fetal](f3_graficos/grafico_9.jpg){#fig-corr9} -->
+<!-- No gráfico de dispersão, a RRAS 2 destaca-se no extremo superior esquerdo, registrando a maior taxa de mortalidade fetal acompanhada pelo menor percentual de realização de mais de 7 consultas. No extremo oposto, as RRAS 10, 12, 16 e 15 situam-se no quadrante inferior direito, apresentando alta cobertura de consultas e as menores taxas de mortalidade fetal observadas no período. -->
+<!-- ![Dispersão entre cob_pop_AB e tx_PPes](f3_graficos/grafico_10.jpg){#fig-corr10} -->
+<!-- No gráfico da Figura 10, é visto que as RRAS 11 e 12 posicionam-se no extremo superior direito da tendência, enquanto as RRAS 2 e 5 ocupam o extremo inferior esquerdo. A RRAS 15 destaca-se como um ponto isolado no topo da distribuição, apresentando a maior taxa de prematuridade espontânea do estado para um nível intermediário de cobertura assistencial, ao passo que as RRAS 4 e 16 registram taxas de prematuridade espontânea reduzidas apesar de possuírem coberturas de atenção básica superiores a 70%. -->
+<!-- ![Dispersão entre porc_pre_natal_adequado e tx_PPes](f3_graficos/grafico_11.jpg){#fig-corr11} -->
+<!-- Pelo gráfico de dispersão da relação entre a porcentagem de pré-natais adequados e a taxa de prematuridade espontânea, as RRAS 11 e 12 situam-se no quadrante superior direito, combinando altos índices de adequação de pré-natal e taxas elevadas de prematuridade espontânea, enquanto a RRAS 2 posiciona-se no extremo oposto com os menores valores para ambas as variáveis. A RRAS 15 configura-se novamente como o principal desvio da tendência central, mantendo a taxa mais elevada de prematuridade espontânea da amostra, enquanto a RRAS 16 apresenta uma das menores taxas observadas. -->
+
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
