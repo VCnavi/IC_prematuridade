@@ -93,15 +93,13 @@ kable(tabela_classificacao, align = "ccc") |>
 
 As porcentagens utilizadas ao longo do relatório foram calculadas diretamente a partir dos valores absolutos obtidos nas filtragens anteriores. A porcentagem de partos prematuros em relação ao total de nascidos vivos foi obtida dividindo-se o número total de partos prematuros pelo total de nascidos vivos e multiplicando o resultado por 100. De maneira semelhante, esse processo foi aplicado para calcular as porcentagens de partos prematuros eletivos e partos prematuros espontâneos em relação ao total de nascidos vivos e ao total de partos prematuros, criando diferentes taxas para a análise. Empregando esse procedimento para todos esses casos, foi possível adicionar ao banco de dados informações relativas aos anos no Estado de São Paulo como um todo e também informações relativas aos anos e às RRAS separadamente.
 
-A análise das associações entre as variáveis foi realizada por meio do coeficiente de correlação de Spearman. A escolha desse método se justifica por se tratar de uma medida não paramétrica, adequada para avaliar relações monotônicas entre variáveis, sem a necessidade de assumir normalidade na distribuição dos dados.
+A análise das associações entre as variáveis foi realizada por meio do coeficiente de correlação de Spearman (rho ou $\rho$). A escolha desse método se justifica por se tratar de uma medida não paramétrica, adequada para avaliar relações monotônicas entre variáveis, sem a necessidade de assumir normalidade na distribuição dos dados.
 
 Foram calculadas as correlações entre os indicadores de prematuridade e variáveis sociodemográficas, de cobertura assistencial e de condições de saúde. Adicionalmente, foram obtidos os valores de p para cada correlação, permitindo a avaliação da significância estatística das associações observadas.
 
-Para fins interpretativos, consideraram-se estatisticamente significativas as correlações com p-valor inferior a 0,05.
-
 ## Correlação de Spearman
 
-O coeficiente de correlação de Spearman (rho ou $\rho$) avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos [@Spearman_1904].
+O coeficiente de correlação de Spearman avalia a força e a direção da associação entre duas variáveis através de uma relação monotônica. Trata-se de um método não paramétrico, pois ele não exige a suposição de que os dados sigam uma distribuição normal, sendo baseado nos postos dos valores ao invés dos valores brutos [@Spearman_1904].
 
 O teste avalia as seguintes hipóteses estatísticas:
 
@@ -117,11 +115,40 @@ Dentre os resultados fornecidos por esta análise, destacam-se as seguintes medi
 
 Para a realização das análises no ambiente R, utiliza-se a função nativa `cor.test()`, especificando o argumento `method = "spearman"`. Esta função calcula tanto o coeficiente de correlação quanto a significância estatística necessária para a interpretação dos dados.
 
-Os resultados são apresentados no relatório destacando o coeficiente de correlação, que indica a magnitude da associação, e o p-valor correspondente, onde p < 0.05 é considerado significativo e p < 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis.
+Os resultados são apresentados no relatório destacando o coeficiente de correlação, que indica a magnitude da associação, e o p-valor correspondente, onde p < 0.05 é considerado significativo e p < 0.01 é considerado altamente significativo para rejeitar a independência entre as variáveis. Além disso, para fins interpretativos neste relatório, consideraram-se as magnitudes de correlação sugeridas por Mukaka [-@mukaka2012guide] como as mais relevantes para apresentação dos resultados, tal que:
+
+```{r table1, echo=FALSE, message=FALSE, warnings=FALSE}
+#| label: tabela-magnitude-correlacao
+#| tbl-cap: "Tabela 2: Interpretação dos coeficientes de correlação."
+dados_correlacao <- data.frame(
+  `Valor da correlação` = c(
+    "|ρ| < 0.3",
+    "0.3 ≤ |ρ| < 0.5",
+    "0.5 ≤ |ρ| < 0.7",
+    "0.7 ≤ |ρ| < 0.9",
+    "|ρ| ≥ 0.9"
+  ),
+  Interpretacao = c(
+    "Desprezível",
+    "Fraca",
+    "Moderada",
+    "Forte",
+    "Muito forte"
+  ),
+  check.names = FALSE
+)
+
+kable(dados_correlacao, 
+      format = "html",
+      escape = FALSE,  
+      align = "cc") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"),
+                full_width = FALSE)
+```
 
 ## Variáveis consideradas nas análise
 
-Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. A descrição das variáveis, suas respectivas abreviações e anos de referência está apresentada na Tabela 1.
+Foram incluídas na análise variáveis relacionadas à prematuridade, características socioeconômicas e indicadores de assistência à saúde. A descrição das variáveis, suas respectivas abreviações e anos de referência está apresentada na Tabela 3.
 
 Entre os indicadores de prematuridade, consideraram-se a taxa de partos prematuros, a taxa de partos prematuros eletivos e a taxa de partos prematuros espontâneos, sendo esses indicadores relativos ao ano de 2024.
 
@@ -133,7 +160,7 @@ Todas essas variáveis foram analisadas no nível das Redes Regionais de Atenç�
 
 ```{r table2, echo=FALSE}
 #| label: tabela-descricao
-#| tbl-cap: "Tabela 2: Descrição das variáveis utilizadas na análise."
+#| tbl-cap: "Tabela 3: Descrição das variáveis utilizadas na análise."
 
 tabela_variaveis <- data.frame(
   Variável = c(
@@ -191,8 +218,6 @@ Apresentam-se a seguir os gráficos e tabelas de correlação, assim como os gr�
 #| fig-align: "center"
 knitr::include_graphics("f3_graficos/corrplot.jpg")
 ```
-
-[Aqui dá para adicionar os comentarios relativos as váriaveis que não são de prematuridade]
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # # formato longo
@@ -307,7 +332,7 @@ tabela_final <- left_join(tabela_p, tabela_aux) |>
 
 ```{r table3, echo=FALSE, warning=FALSE, message=FALSE}
 #| label: tabela-valor-p-tx-PP
-#| tbl-cap: "Tabela 3: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde."
+#| tbl-cap: "Tabela 4: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde."
 
 tabela_final |>
   filter(Variavel1 == "tx_PP") |>
@@ -378,11 +403,17 @@ ggplot(df_long, aes(x = valor, y = tx_PP)) +
 
 ```
 
+Levando em consideração as correlações não desprezíveis, identificou-se que a taxa de partos prematuros apresentou forte correlação positiva com a taxa de partos prematuros eletivos ($\rho = 0.7276$) e, apesar de estar no limite de uma correlação fraca, apresentou também correlação positiva com a taxa de partos prematuros espontâneos ($\rho = 0.3090$). Resultado esse esperado, pois as taxa de partos prematuros eletivos e espontâneos estão contidas dentro da taxa de partos prematuros gerais. As demais variáveis apresentaram correlações desprezíveis com o indicador de taxa de partos prematuros gerais ($\rho < 0.3$).
+
+De maneira a complementar os coeficientes de correlação, é possível observar, pelos gráficos de dispersão da Figura 2, a aparente falta de padrão e formato claro de associação entre a taxa de partos prematuros e as demais variáveis, onde a linha de tendência geral se apresenta de maneira quase reta na horizontal, com exceção da taxa de partos prematuros eletivos, onde os pontos estão dispersos mais próximos à linha de tendência crescente. A taxa de partos prematuros espontâneos não apresenta uma tendência clara em seu gráfico de dispersão.
+
+Em visto disso, analisou-se também as mesmas correlações para os indicadores de prematuridade específicos (eletivos e espontâneos), com o intuito de averiguar a existência de relações entre esses indicadores e as demais variáveis. 
+
 ## Indicador taxa de partos prematuros eletivos
 
 ```{r table4, echo=FALSE, warning=FALSE, message=FALSE}
 #| label: tabela-valor-p-tx-PPel
-#| tbl-cap: "Tabela 4: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade eletiva e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde."
+#| tbl-cap: "Tabela 5: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade eletiva e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde."
 
 tabela_final |>
   filter(Variavel1 == "tx_PPel") |>
@@ -434,11 +465,15 @@ ggplot(df_long, aes(x = valor, y = tx_PPel)) +
 
 ```
 
-## Indicador taxa de partos Prematuros espontâneos
+Para além do observado na análise da taxa de partos prematuros gerais, encontrou-se aqui outra correlação não deprezível para a taxa de partos prematuros eletivos, sendo ela a correlação negativa com a razão de mortalidade materna ($\rho = -0.3086$). Essa correlação traz indícios de que uma maior taxa de partos prematuros eletivos leva a uma menor razão de mortalidade materna (menor número de óbitos maternos). No entanto, como é uma correlação fraca e próxima de uma correlação considerada desprezível, deve se tomar bastante cuidado na consideração dessa interpretação. As demais variáveis apresentaram correlações desprezíveis com o indicador de taxa de partos prematuros gerais ($\rho < 0.3$).
+
+Assim como anteriormente, é possível observar graficamente na Figura 3 a dispersão entre a taxa de partos prematuros eletivos e a taxa de partos prematuros, enquanto suas demais relações apresentam uma aparente falta de padrão e de formato claro de associação, onde a linha de tendência geral se apresenta de maneira quase reta na horizontal. Mesmo a relação com a razão de mortalidade materna apresentando uma linha de tendência levemente inclinada para baixo, é difícil afirmar, graficamente, que existe essa relação.
+
+## Indicador taxa de partos prematuros espontâneos
 
 ```{r table5, echo=FALSE, warning=FALSE, message=FALSE}
 #| label: tabela-valor-p-tx-PPes
-#| tbl-cap: "Tabela 5: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade espontânea e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde."
+#| tbl-cap: "Tabela 6: Valores p e coeficientes de correlação de Spearman entre o indicador taxa de prematuridade espontânea e os indicadores sociodemográficos, de cobertura assistencial e de condições de saúde."
 
 tabela_final |>
   filter(Variavel1 == "tx_PPes") |>
@@ -489,6 +524,10 @@ ggplot(df_long, aes(x = valor, y = tx_PPes)) +
   ) 
 
 ```
+
+Diferentemente das demais taxas, a taxa de partos prematuros espontâneos apresentou mais correlações com os outros indicadores socioeconômicos e de assistência à saúde. Além da correlação observada entre essa taxa e a taxa de partos prematuros gerais, observa-se também as correlações fracas com a taxa de mortalidade fetal ($\rho = -0.3532$), com o início precoce do pré-natal ($\rho = 0.3318$), com a porcentagem de usuárias exclusivas do SUS	($\rho = 0.3397$), com a adequação do pré-natal ($\rho = 0.4788$) e com a cobertura populacional da atenção básica ($\rho = 0.4788$). Além disso, obteve-se duas correlações positivas moderadas com a porcentagem de mulheres com mais de sete consultas de pré-natal ($\rho = 0.5995$) e a cobertura da Estratégia Saúde da Família ($\rho = 0.6016$). Esses resultados trazem indícios de que, no contexto da taxa de prematuridade espontânea, o maior acesso às consultas e ao sistema público favorece a detecção de gestações de risco
+
+Assim como os dados dos coeficientes de correlação indicam, é possível observar um maior número de linhas de tendência inclinadas negativa e positivamente nos gráficos de dispersão da Figura 4 em comparação com os gráficos de dispersão das demais taxas de partos prematuros, corroborando os resultados trazidos pela correlação de Spearman.
 
 <!-- Observa-se inicialmente na Figura 1 e na Tabela 2 uma forte correlação positiva entre a taxa de partos prematuros totais e a taxa de partos prematuros eletivos ($\rho$ = 0,73), indicando que a variação da prematuridade total é fortemente influenciada pelos partos prematuros de natureza eletiva. Em contrapartida, a correlação entre prematuridade total e prematuridade espontânea foi mais fraca ($\rho$ = 0,31), sugerindo menor contribuição relativa desse componente. -->
 
